@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Proj1", "Proj1\Proj1.csproj", "{6485EDCF-5CC5-4092-9879-182E340CD281}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrgyClearance", "BrgyClearance\BrgyClearance.csproj", "{6485EDCF-5CC5-4092-9879-182E340CD281}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
