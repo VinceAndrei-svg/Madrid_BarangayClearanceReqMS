@@ -1,0 +1,110 @@
+@model Proj1.Models.ViewModels.ResidentIndexViewModel
+@{
+    ViewData["Title"] = "Residents";
+}
+
+<h2>Residents</h2>
+
+<form method="get" class="mb-3 row g-2 align-items-center">
+    <div class="col-md-3">
+        <input name="search" value="@Model.Search" class="form-control" placeholder="Search name or address..." />
+    </div>
+    <div class="col-md-2">
+        <input name="minAge" value="@Model.MinAge" class="form-control" placeholder="Min age" type="number" min="0" />
+    </div>
+    <div class="col-md-2">
+        <input name="maxAge" value="@Model.MaxAge" class="form-control" placeholder="Max age" type="number" min="0" />
+    </div>
+    <div class="col-md-2">
+        <select name="sort" class="form-select">
+            <option value="" selected="@(string.IsNullOrEmpty(Model.Sort))">Name (A-Z)</option>
+            <option value="name_desc" selected="@(Model.Sort == "name_desc")">Name (Z-A)</option>
+            <option value="birth_asc" selected="@(Model.Sort == "birth_asc")">Birth Date (Oldest)</option>
+            <option value="birth_desc" selected="@(Model.Sort == "birth_desc")">Birth Date (Youngest)</option>
+        </select>
+    </div>
+    <div class="col-md-1">
+        <select name="pageSize" class="form-select">
+            <option value="5" selected="@(Model.PageSize == 5)">5</option>
+            <option value="10" selected="@(Model.PageSize == 10)">10</option>
+            <option value="20" selected="@(Model.PageSize == 20)">20</option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-outline-primary w-100">Apply</button>
+    </div>
+</form>
+
+<div class="mb-3">
+    <a class="btn btn-outline-success"
+       asp-action="ExportCsv"
+       asp-route-search="@Model.Search"
+       asp-route-sort="@Model.Sort"
+       asp-route-minAge="@Model.MinAge"
+       asp-route-maxAge="@Model.MaxAge">
+        Export CSV
+    </a>
+
+    <a class="btn btn-outline-danger"
+       asp-action="ExportPdf"
+       asp-route-search="@Model.Search"
+       asp-route-sort="@Model.Sort"
+       asp-route-minAge="@Model.MinAge"
+       asp-route-maxAge="@Model.MaxAge">
+        Export PDF
+    </a>
+</div>
+
+<a class="btn btn-primary mb-3" asp-action="Create">Add Resident</a>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Full Name</th>
+        <th>Address</th>
+        <th>Birth Date</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var r in Model.Residents)
+    {
+        <tr>
+            <td>@r.FullName</td>
+            <td>@r.Address</td>
+            <td>@r.BirthDate.ToString("yyyy-MM-dd")</td>
+            <td class="text-end">
+                <a class="btn btn-sm btn-info" asp-action="Details" asp-route-id="@r.Id">Details</a>
+                <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@r.Id">Edit</a>
+                <form asp-action="Delete" asp-route-id="@r.Id" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-sm btn-danger"
+                            onclick="return confirm('Delete this resident?');">
+                        Delete
+                    </button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+@if (Model.TotalPages > 1)
+{
+    <nav>
+        <ul class="pagination">
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.Page ? "active" : "")">
+                    <a class="page-link"
+                       asp-action="Index"
+                       asp-route-page="@i"
+                       asp-route-pageSize="@Model.PageSize"
+                       asp-route-search="@Model.Search"
+                       asp-route-sort="@Model.Sort"
+                       asp-route-minAge="@Model.MinAge"
+                       asp-route-maxAge="@Model.MaxAge">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+}

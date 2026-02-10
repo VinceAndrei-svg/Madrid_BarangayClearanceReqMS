@@ -1,0 +1,16 @@
+@model Proj1.Models.ViewModels.ResidentDetailsViewModel
+@{
+    ViewData["Title"] = "Resident Details";
+}
+
+<h2>Resident Details</h2>
+
+<div class="card">
+    <div class="card-body">
+        <p><strong>Name:</strong> @Model.FullName</p>
+        <p><strong>Address:</strong> @Model.Address</p>
+        <p><strong>Birth Date:</strong> @Model.BirthDate.ToString("yyyy-MM-dd")</p>
+    </div>
+</div>
+
+<a class="btn btn-secondary mt-3" asp-action="Index">Back to List</a>
