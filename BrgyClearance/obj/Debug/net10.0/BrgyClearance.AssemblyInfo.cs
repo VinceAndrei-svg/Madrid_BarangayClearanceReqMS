@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BrgyClearance")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+df1b45afa9314340097e41c68ec1542f2e0e4c67")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c69546763994e66ed1dd2fbd9ac0cde6226636b9")]
 [assembly: System.Reflection.AssemblyProductAttribute("BrgyClearance")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BrgyClearance")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

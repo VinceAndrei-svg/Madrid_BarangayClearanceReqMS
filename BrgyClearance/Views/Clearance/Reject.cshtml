@@ -1,0 +1,19 @@
+@model Proj1.Models.ViewModels.ProcessClearanceRequestViewModel
+
+@{
+    ViewData["Title"] = "Reject Request";
+}
+
+<h2>Reject Request</h2>
+
+<form asp-action="Reject" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label class="form-label">Reason / Remarks</label>
+        <textarea asp-for="Remarks" class="form-control" rows="3" required></textarea>
+    </div>
+
+    <button class="btn btn-danger">Reject</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

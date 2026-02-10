@@ -1,0 +1,30 @@
+@model Proj1.Models.ViewModels.CreateClearanceRequestViewModel
+
+@{
+    ViewData["Title"] = "Request Clearance";
+}
+
+<h2>Request Clearance</h2>
+
+<form asp-action="Create" method="post" class="row g-3">
+    <div class="col-md-6">
+        <label class="form-label">Clearance Type</label>
+        <select asp-for="ClearanceTypeId" class="form-select" required>
+            <option value="">-- Select --</option>
+            @foreach (var ct in Model.ClearanceTypes)
+            {
+                <option value="@ct.Id">@ct.TypeName</option>
+            }
+        </select>
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Purpose</label>
+        <input asp-for="Purpose" class="form-control" required />
+    </div>
+
+    <div class="col-12">
+        <button class="btn btn-primary">Submit Request</button>
+        <a asp-action="Index" class="btn btn-secondary">Back</a>
+    </div>
+</form>

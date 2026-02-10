@@ -1,0 +1,42 @@
+@model List<Proj1.Models.ViewModels.ClearanceRequestViewModel>
+
+@{
+    ViewData["Title"] = "Clearance Requests";
+}
+
+<h2>Clearance Requests</h2>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Resident</th>
+        <th>Type</th>
+        <th>Purpose</th>
+        <th>Request Date</th>
+        <th>Status</th>
+        <th>Reference #</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var req in Model)
+    {
+        <tr>
+            <td>@req.ResidentName</td>
+            <td>@req.ClearanceType</td>
+            <td>@req.Purpose</td>
+            <td>@req.RequestDate.ToString("yyyy-MM-dd")</td>
+            <td>@req.Status</td>
+            <td>@req.ReferenceNumber</td>
+            <td class="text-end">
+                <a class="btn btn-sm btn-success"
+                   asp-action="Approve"
+                   asp-route-id="@req.Id">Approve</a>
+                <a class="btn btn-sm btn-danger"
+                   asp-action="Reject"
+                   asp-route-id="@req.Id">Reject</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

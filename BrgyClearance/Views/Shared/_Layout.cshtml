@@ -29,10 +29,10 @@
                         <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Home</a>
                     </li>
 
-                    @if (User.IsInRole(Roles.Admin))
+                    @if (User.IsInRole(Roles.Admin) || User.IsInRole(Roles.Staff))
                     {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Admin" asp-action="Dashboard">Admin</a>
+                            <a class="nav-link text-dark" asp-controller="Resident" asp-action="Index">Residents</a>
                         </li>
                     }
                 </ul>

@@ -44,6 +44,14 @@
         "net10.0": {
           "targetAlias": "net10.0",
           "dependencies": {
+            "AutoMapper": {
+              "target": "Package",
+              "version": "[12.0.1, )"
+            },
+            "AutoMapper.Extensions.Microsoft.DependencyInjection": {
+              "target": "Package",
+              "version": "[12.0.1, )"
+            },
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
               "version": "[10.0.2, )"
@@ -69,6 +77,10 @@
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
               "version": "[10.0.2, )"
+            },
+            "QuestPDF": {
+              "target": "Package",
+              "version": "[2025.12.4, )"
             }
           },
           "imports": [

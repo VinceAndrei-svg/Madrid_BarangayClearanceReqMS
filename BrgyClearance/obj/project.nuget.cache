@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "X7ewtbSdwH8=",
+  "dgSpecHash": "PrDmQR6UXNk=",
   "success": true,
   "projectFilePath": "/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/BrgyClearance.csproj",
   "expectedPackageFiles": [
+    "/Users/drei.dev/.nuget/packages/automapper/12.0.1/automapper.12.0.1.nupkg.sha512",
+    "/Users/drei.dev/.nuget/packages/automapper.extensions.microsoft.dependencyinjection/12.0.1/automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
     "/Users/drei.dev/.nuget/packages/azure.core/1.47.1/azure.core.1.47.1.nupkg.sha512",
     "/Users/drei.dev/.nuget/packages/azure.identity/1.14.2/azure.identity.1.14.2.nupkg.sha512",
     "/Users/drei.dev/.nuget/packages/humanizer/2.14.1/humanizer.2.14.1.nupkg.sha512",
@@ -116,6 +118,7 @@
     "/Users/drei.dev/.nuget/packages/nuget.projectmodel/6.12.1/nuget.projectmodel.6.12.1.nupkg.sha512",
     "/Users/drei.dev/.nuget/packages/nuget.protocol/6.12.1/nuget.protocol.6.12.1.nupkg.sha512",
     "/Users/drei.dev/.nuget/packages/nuget.versioning/6.12.1/nuget.versioning.6.12.1.nupkg.sha512",
+    "/Users/drei.dev/.nuget/packages/questpdf/2025.12.4/questpdf.2025.12.4.nupkg.sha512",
     "/Users/drei.dev/.nuget/packages/system.clientmodel/1.5.1/system.clientmodel.1.5.1.nupkg.sha512",
     "/Users/drei.dev/.nuget/packages/system.codedom/6.0.0/system.codedom.6.0.0.nupkg.sha512",
     "/Users/drei.dev/.nuget/packages/system.composition/9.0.0/system.composition.9.0.0.nupkg.sha512",

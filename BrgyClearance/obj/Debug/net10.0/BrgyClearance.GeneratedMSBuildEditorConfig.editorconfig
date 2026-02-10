@@ -46,12 +46,44 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQWRtaW4vRGFzaGJvYXJkLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/Views/Clearance/Approve.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2xlYXJhbmNlL0FwcHJvdmUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/Views/Clearance/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2xlYXJhbmNlL0NyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/Views/Clearance/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2xlYXJhbmNlL0luZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/Views/Clearance/Reject.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2xlYXJhbmNlL1JlamVjdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9JbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9Qcml2YWN5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/Views/Resident/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUmVzaWRlbnQvQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/Views/Resident/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUmVzaWRlbnQvRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/Views/Resident/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUmVzaWRlbnQvRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/Views/Resident/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUmVzaWRlbnQvSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/Views/Shared/Error.cshtml]
