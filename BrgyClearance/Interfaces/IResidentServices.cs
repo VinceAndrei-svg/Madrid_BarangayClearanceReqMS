@@ -11,6 +11,7 @@ public interface IResidentService
     Task CreateAsync(CreateResidentDto dto);
     Task<bool> UpdateAsync(UpdateResidentDto dto);
     Task<bool> DeleteAsync(int id);
+    Task<ResidentDto?> GetByUserIdAsync(string userId);
 
     Task<PagedResult<ResidentDto>> GetPagedAsync(
         int page,

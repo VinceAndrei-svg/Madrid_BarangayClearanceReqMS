@@ -2,11 +2,46 @@
     ViewData["Title"] = "Admin Dashboard";
 }
 
-<h2>Admin Dashboard</h2>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4">Admin Dashboard</h2>
 
-@if (TempData["Success"] != null)
-{
-    <div class="alert alert-success">@TempData["Success"]</div>
-}
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @TempData["Success"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
 
-<a class="btn btn-primary" asp-action="CreateStaff">Create Staff Account</a>
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="card border-primary">
+                        <div class="card-body text-center">
+                            <i class="bi bi-people-fill display-4 text-primary"></i>
+                            <h5 class="card-title mt-3">Staff Management</h5>
+                            <p class="card-text">Create and manage staff accounts</p>
+                            <a asp-action="Index" class="btn btn-primary">
+                                <i class="bi bi-arrow-right-circle"></i> Manage Staff
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card border-success">
+                        <div class="card-body text-center">
+                            <i class="bi bi-file-earmark-text-fill display-4 text-success"></i>
+                            <h5 class="card-title mt-3">Clearance Requests</h5>
+                            <p class="card-text">View and process all requests</p>
+                            <a asp-controller="Clearance" asp-action="Index" class="btn btn-success">
+                                <i class="bi bi-arrow-right-circle"></i> View Requests
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

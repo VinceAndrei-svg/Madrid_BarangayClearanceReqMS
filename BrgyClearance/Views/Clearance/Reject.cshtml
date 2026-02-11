@@ -1,19 +1,69 @@
 @model Proj1.Models.ViewModels.ProcessClearanceRequestViewModel
 
 @{
-    ViewData["Title"] = "Reject Request";
+    ViewData["Title"] = "Reject Clearance Request";
 }
 
-<h2>Reject Request</h2>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">
+                        <i class="bi bi-x-circle"></i> Reject Request
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <strong>Warning:</strong> You are about to reject this clearance request.
+                        Please provide a clear reason for the rejection.
+                    </div>
 
-<form asp-action="Reject" method="post">
-    <input type="hidden" asp-for="Id" />
+                    <form asp-action="Reject" method="post">
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="Approve" value="false" />
 
-    <div class="mb-3">
-        <label class="form-label">Reason / Remarks</label>
-        <textarea asp-for="Remarks" class="form-control" rows="3" required></textarea>
+                        <div class="mb-3">
+                            <label asp-for="Remarks" class="form-label">
+                                Rejection Reason <span class="text-danger">*</span>
+                            </label>
+                            <textarea asp-for="Remarks" class="form-control" rows="4" 
+                                      placeholder="Clearly state the reason for rejection..." required></textarea>
+                            <span asp-validation-for="Remarks" class="text-danger"></span>
+                            <small class="form-text text-muted">
+                                Example: "Incomplete documents - Missing valid ID", "Incorrect address information"
+                            </small>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-x-circle"></i> Confirm Rejection
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card mt-3 border-warning">
+                <div class="card-body">
+                    <h6 class="card-title text-warning">
+                        <i class="bi bi-exclamation-triangle"></i> Important
+                    </h6>
+                    <ul class="small mb-0">
+                        <li>Resident will see your rejection reason</li>
+                        <li>Be professional and constructive in your feedback</li>
+                        <li>Resident may resubmit after addressing the issues</li>
+                        <li>Action is logged for audit trail</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
-    <button class="btn btn-danger">Reject</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-</form>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

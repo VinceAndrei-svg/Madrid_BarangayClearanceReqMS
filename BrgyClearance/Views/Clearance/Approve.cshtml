@@ -1,19 +1,67 @@
 @model Proj1.Models.ViewModels.ProcessClearanceRequestViewModel
 
 @{
-    ViewData["Title"] = "Approve Request";
+    ViewData["Title"] = "Approve Clearance Request";
 }
 
-<h2>Approve Request</h2>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-success">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">
+                        <i class="bi bi-check-circle"></i> Approve Request
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-success">
+                        <strong>Action:</strong> You are about to approve this clearance request.
+                        The resident will be able to collect their clearance certificate.
+                    </div>
 
-<form asp-action="Approve" method="post">
-    <input type="hidden" asp-for="Id" />
+                    <form asp-action="Approve" method="post">
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="Approve" value="true" />
 
-    <div class="mb-3">
-        <label class="form-label">Remarks (optional)</label>
-        <textarea asp-for="Remarks" class="form-control" rows="3"></textarea>
+                        <div class="mb-3">
+                            <label asp-for="Remarks" class="form-label">
+                                Remarks <small class="text-muted">(Optional)</small>
+                            </label>
+                            <textarea asp-for="Remarks" class="form-control" rows="4" 
+                                      placeholder="Add any notes or special instructions..."></textarea>
+                            <span asp-validation-for="Remarks" class="text-danger"></span>
+                            <small class="form-text text-muted">
+                                Example: "Valid for 6 months from date of issue"
+                            </small>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-check-circle"></i> Confirm Approval
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h6 class="card-title">What Happens Next?</h6>
+                    <ul class="small mb-0">
+                        <li>Request status will be changed to "Approved"</li>
+                        <li>Your username will be recorded as the processor</li>
+                        <li>Timestamp will be saved for audit purposes</li>
+                        <li>Resident can view the approval in their requests</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
-    <button class="btn btn-success">Approve</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-</form>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

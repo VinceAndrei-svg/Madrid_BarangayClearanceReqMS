@@ -4,10 +4,10 @@ namespace Proj1.Interfaces;
 
 public interface IAccountService
 {
-    Task<(bool Succeeded, IEnumerable<string> Errors)> RegisterResidentAsync(RegisterResidentDto dto);
-    Task<(bool Succeeded, string? Error)> LoginAsync(LoginDto dto);
-
+    Task<ServiceResult> RegisterResidentAsync(RegisterResidentDto dto);
+    Task<ServiceResult> LoginAsync(LoginDto dto);
     Task LogoutAsync();
-
-    Task<(bool Succeeded, IEnumerable<string> Errors)> CreateStaffAsync(CreateStaffDto dto);
+    Task<ServiceResult> CreateStaffAsync(CreateStaffDto dto);
+    Task<ServiceResult<List<StaffListDto>>> GetStaffListAsync();
+    Task<ServiceResult> ToggleStaffStatusAsync(ToggleStaffStatusDto dto);
 }

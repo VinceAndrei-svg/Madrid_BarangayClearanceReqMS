@@ -47,7 +47,9 @@ public class ClearanceRequestRepository : IClearanceRequestRepository
     {
         return await _context.ClearanceRequests
             .Include(r => r.ClearanceType)
+            .Include(r => r.Resident)    
             .Where(r => r.ResidentId == residentId)
+            .OrderByDescending(r => r.RequestDate) 
             .ToListAsync();
     }
 

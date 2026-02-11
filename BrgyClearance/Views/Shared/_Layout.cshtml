@@ -34,6 +34,19 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="Resident" asp-action="Index">Residents</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Clearance" asp-action="Index">Manage Requests</a>
+                        </li>
+                    }
+
+                    @if (User.IsInRole(Roles.Resident))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Clearance" asp-action="MyRequests">My Requests</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Clearance" asp-action="Create">Request Clearance</a>
+                        </li>
                     }
                 </ul>
 

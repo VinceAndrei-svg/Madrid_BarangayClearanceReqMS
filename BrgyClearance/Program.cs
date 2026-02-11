@@ -2,8 +2,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Proj1.Interfaces;
 using Proj1.MappingProfiles;
+using Proj1.Persons;
 using Proj1.Repositories;
 using Proj1.Seed;
+using Proj1.Services;
 using Proj1.Services;
 using ApplicationDbContext = Proj1.Data.ApplicationDbContext;
 
@@ -40,6 +42,8 @@ builder.Services.AddAutoMapper(typeof(ResidentProfile).Assembly);
 builder.Services.AddScoped<IPdfService, PdfService>();
 builder.Services.AddScoped<IClearanceTypeRepository, ClearanceTypeRepository>();
 builder.Services.AddScoped<IClearanceTypeService, ClearanceTypeService>();
+builder.Services.AddScoped<IClearanceRequestRepository, ClearanceRequestRepository>();
+builder.Services.AddScoped<IClearanceRequestService, ClearanceRequestService>();
 
 var app = builder.Build();
 
@@ -53,6 +57,7 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     await IdentitySeeder.SeedRolesAndAdminAsync(services);
+    await ClearanceTypeSeeder.SeedClearanceTypesAsync(services);
 }
 
 app.UseHttpsRedirection();

@@ -4,27 +4,59 @@
     ViewData["Title"] = "Request Clearance";
 }
 
-<h2>Request Clearance</h2>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Request Barangay Clearance</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
-<form asp-action="Create" method="post" class="row g-3">
-    <div class="col-md-6">
-        <label class="form-label">Clearance Type</label>
-        <select asp-for="ClearanceTypeId" class="form-select" required>
-            <option value="">-- Select --</option>
-            @foreach (var ct in Model.ClearanceTypes)
-            {
-                <option value="@ct.Id">@ct.TypeName</option>
-            }
-        </select>
-    </div>
+                        <div class="mb-3">
+                            <label asp-for="ClearanceTypeId" class="form-label">Clearance Type</label>
+                            <select asp-for="ClearanceTypeId" class="form-select">
+                                <option value="">-- Select Clearance Type --</option>
+                                @foreach (var type in Model.ClearanceTypes)
+                                {
+                                    <option value="@type.Id">@type.TypeName</option>
+                                }
+                            </select>
+                            <span asp-validation-for="ClearanceTypeId" class="text-danger"></span>
+                        </div>
 
-    <div class="col-md-6">
-        <label class="form-label">Purpose</label>
-        <input asp-for="Purpose" class="form-control" required />
-    </div>
+                        <div class="mb-3">
+                            <label asp-for="Purpose" class="form-label">Purpose</label>
+                            <textarea asp-for="Purpose" class="form-control" rows="4" 
+                                      placeholder="Please specify the purpose of this clearance request..."></textarea>
+                            <span asp-validation-for="Purpose" class="text-danger"></span>
+                        </div>
 
-    <div class="col-12">
-        <button class="btn btn-primary">Submit Request</button>
-        <a asp-action="Index" class="btn btn-secondary">Back</a>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-action="MyRequests" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Submit Request</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h6 class="card-title">Processing Information</h6>
+                    <ul class="small text-muted mb-0">
+                        <li>Your request will be reviewed by barangay staff</li>
+                        <li>Processing time varies by clearance type</li>
+                        <li>You will be notified once your request is processed</li>
+                        <li>Reference number will be generated upon submission</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
-</form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

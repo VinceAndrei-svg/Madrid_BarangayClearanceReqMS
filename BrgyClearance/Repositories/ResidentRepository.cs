@@ -33,6 +33,12 @@ public class ResidentRepository : IResidentRepository
     {
         return await _context.Residents.FindAsync(id);
     }
+    
+    public async Task<Resident?> GetByUserIdAsync(string userId)
+    {
+        return await _context.Residents
+            .FirstOrDefaultAsync(r => r.UserId == userId);
+    }
 
     public async Task AddAsync(Resident resident)
     {

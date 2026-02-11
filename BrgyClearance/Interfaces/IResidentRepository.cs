@@ -7,6 +7,7 @@ public interface IResidentRepository
     Task<List<Resident>> GetAllAsync();
     Task<List<Resident>> SearchAsync(string search);
     Task<Resident?> GetByIdAsync(int id);
+    Task<Resident?> GetByUserIdAsync(string userId);
     Task AddAsync(Resident resident);
     Task UpdateAsync(Resident resident);
     Task DeleteAsync(Resident resident);

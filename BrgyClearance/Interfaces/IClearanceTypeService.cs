@@ -5,4 +5,5 @@ namespace Proj1.Interfaces;
 public interface IClearanceTypeService
 {
     Task<List<ClearanceTypeViewModel>> GetActiveAsync();
+    
 }

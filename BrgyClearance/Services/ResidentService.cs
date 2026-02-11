@@ -34,6 +34,12 @@ public class ResidentService : IResidentService
         var resident = await _repository.GetByIdAsync(id);
         return resident == null ? null : _mapper.Map<ResidentDto>(resident);
     }
+    
+    public async Task<ResidentDto?> GetByUserIdAsync(string userId)
+    {
+        var resident = await _repository.GetByUserIdAsync(userId);
+        return resident == null ? null : _mapper.Map<ResidentDto>(resident);
+    }
 
     public async Task CreateAsync(CreateResidentDto dto)
     {
