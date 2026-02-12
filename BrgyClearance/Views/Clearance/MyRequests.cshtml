@@ -51,33 +51,51 @@
                                         <th>Date Requested</th>
                                         <th>Status</th>
                                         <th>Remarks</th>
+                                        @* 
+                                            LEARNING POINT #1: Adding Actions Column
+                                            ==========================================
+                                            We add a new column for action buttons. This is a common
+                                            pattern in CRUD (Create, Read, Update, Delete) applications.
+                                            
+                                            Best Practice: 
+                                            - Use text-end to right-align action buttons
+                                            - Keep actions in last column for consistency
+                                        *@
+                                        <th class="text-end">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach (var request in Model)
                                     {
                                         <tr>
-                                            <td><strong>@request.ReferenceNumber</strong></td>
-                                            <td>@request.ClearanceTypeName</td>
-                                            <td>@request.Purpose</td>
-                                            <td>@request.RequestDate.ToLocalTime().ToString("MMM dd, yyyy")</td>
                                             <td>
-                                                @if (request.Status == "Approved")
-                                                {
-                                                    <span class="badge bg-success">Approved</span>
-                                                }
-                                                else if (request.Status == "Rejected")
-                                                {
-                                                    <span class="badge bg-danger">Rejected</span>
-                                                }
-                                                else if (request.Status == "Pending")
-                                                {
-                                                    <span class="badge bg-warning text-dark">Pending</span>
-                                                }
-                                                else
-                                                {
-                                                    <span class="badge bg-info text-dark">Submitted</span>
-                                                }
+                                                @* 
+                                                    LEARNING POINT #2: Making Reference Number Clickable
+                                                    ====================================================
+                                                    We make the reference number a link to Details page.
+                                                    This is a UX best practice - users can click to see
+                                                    full details if needed.
+                                                *@
+                                                <a asp-action="Details" asp-route-id="@request.Id" 
+                                                   class="text-decoration-none fw-bold">
+                                                    @request.ReferenceNumber
+                                                </a>
+                                            </td>
+                                            <td>@request.ClearanceTypeName</td>
+                                            <td>
+                                                @* 
+                                                    LEARNING POINT #3: Truncating Long Text
+                                                    ========================================
+                                                    For table display, we truncate long purposes to keep
+                                                    the table compact. Full text available in Details.
+                                                *@
+                                                <small>@(request.Purpose.Length > 30 ? request.Purpose.Substring(0, 30) + "..." : request.Purpose)</small>
+                                            </td>
+                                            <td>
+                                                <small>@request.RequestDate.ToLocalTime().ToString("MMM dd, yyyy")</small>
+                                            </td>
+                                            <td>
+                                                <span class="badge @request.StatusBadgeClass">@request.Status</span>
                                             </td>
                                             <td>
                                                 @if (!string.IsNullOrEmpty(request.Remarks))
@@ -89,7 +107,253 @@
                                                     <span class="text-muted">—</span>
                                                 }
                                             </td>
+                                            <td class="text-end">
+                                                @* 
+                                                    LEARNING POINT #4: Conditional Action Buttons
+                                                    ==============================================
+                                                    We only show Cancel button for requests that CAN be cancelled.
+                                                    
+                                                    Business Rule: Only Submitted or Pending requests can be cancelled.
+                                                    Once approved/rejected/released, cancellation is no longer allowed.
+                                                    
+                                                    Best Practice:
+                                                    - Check business rules before showing actions
+                                                    - Don't show disabled buttons (confusing for users)
+                                                    - Show appropriate buttons based on state
+                                                *@
+                                                @if (request.Status == "Submitted" || request.Status == "Pending")
+                                                {
+                                                    @* 
+                                                        LEARNING POINT #5: Bootstrap Modal Trigger
+                                                        ==========================================
+                                                        data-bs-toggle="modal" - Tells Bootstrap this triggers a modal
+                                                        data-bs-target="#cancelModal-@request.Id" - Links to specific modal
+                                                        
+                                                        Why unique ID per request?
+                                                        - Each request needs its own modal to pass the correct request ID
+                                                        - Using @request.Id ensures uniqueness
+                                                        
+                                                        Best Practice:
+                                                        - Use data attributes for Bootstrap components
+                                                        - Keep JavaScript minimal in Razor views
+                                                    *@
+                                                    <button type="button" 
+                                                            class="btn btn-sm btn-outline-danger" 
+                                                            data-bs-toggle="modal" 
+                                                            data-bs-target="#cancelModal-@request.Id"
+                                                            title="Cancel this request">
+                                                        <i class="bi bi-x-circle"></i> Cancel
+                                                    </button>
+                                                }
+                                                else if (request.Status == "Cancelled")
+                                                {
+                                                    @* Show why it was cancelled *@
+                                                    <small class="text-muted">
+                                                        <i class="bi bi-info-circle"></i> Cancelled by you
+                                                    </small>
+                                                }
+                                                else
+                                                {
+                                                    @* For other statuses (Approved, Released, etc.), show view details *@
+                                                    <a asp-action="Details" asp-route-id="@request.Id" 
+                                                       class="btn btn-sm btn-outline-secondary"
+                                                       title="View full details">
+                                                        <i class="bi bi-eye"></i> View
+                                                    </a>
+                                                }
+                                            </td>
                                         </tr>
+                                        
+                                        @* 
+                                            LEARNING POINT #6: Modal Placement Strategy
+                                            ===========================================
+                                            We place each modal INSIDE the foreach loop, right after its row.
+                                            
+                                            Why not put all modals at the bottom?
+                                            - Harder to maintain (separated from the button that triggers it)
+                                            - Need to track which modal goes with which button
+                                            
+                                            Why inside the loop?
+                                            - Each request needs its own modal with unique ID
+                                            - Modal is associated with its row (easier to understand)
+                                            - Form automatically gets correct request.Id
+                                            
+                                            Alternative approaches:
+                                            1. Single modal with JavaScript to populate data (more complex)
+                                            2. Partial view for modal (over-engineering for simple case)
+                                            3. This approach: Simple, clear, works great for moderate data
+                                        *@
+                                        
+                                        <!-- Cancel Confirmation Modal for Request @request.ReferenceNumber -->
+                                        <div class="modal fade" 
+                                             id="cancelModal-@request.Id" 
+                                             tabindex="-1" 
+                                             aria-labelledby="cancelModalLabel-@request.Id" 
+                                             aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    @* 
+                                                        LEARNING POINT #7: Form Inside Modal
+                                                        =====================================
+                                                        The entire modal content is wrapped in a form that posts
+                                                        to the Cancel action.
+                                                        
+                                                        Best Practice:
+                                                        - Use asp-action and asp-route-id for type-safe routing
+                                                        - Include anti-forgery token for security
+                                                        - Use POST method for state-changing operations
+                                                        
+                                                        Why POST and not GET?
+                                                        - Cancelling changes data (not idempotent)
+                                                        - POST prevents accidental cancels via URL
+                                                        - POST can include CSRF protection
+                                                    *@
+                                                    <form asp-action="Cancel" 
+                                                          asp-route-id="@request.Id" 
+                                                          method="post">
+                                                        @* 
+                                                            LEARNING POINT #8: Anti-Forgery Token
+                                                            =====================================
+                                                            This token prevents CSRF (Cross-Site Request Forgery) attacks.
+                                                            
+                                                            How it works:
+                                                            1. ASP.NET generates a unique token per session
+                                                            2. Token embedded in form as hidden field
+                                                            3. When form submits, server validates token
+                                                            4. If token invalid/missing, request rejected
+                                                            
+                                                            CRITICAL: Always use this for POST forms that change data!
+                                                            
+                                                            The controller action must have [ValidateAntiForgeryToken]
+                                                            attribute to enforce this check.
+                                                        *@
+                                                        @Html.AntiForgeryToken()
+                                                        
+                                                        @* 
+                                                            LEARNING POINT #9: Modal Structure
+                                                            ==================================
+                                                            Bootstrap modals have 3 parts:
+                                                            1. Header - Title and close button
+                                                            2. Body - Main content
+                                                            3. Footer - Action buttons
+                                                            
+                                                            This structure provides:
+                                                            - Consistent UX across your app
+                                                            - Accessibility (proper ARIA labels)
+                                                            - Mobile-friendly layout
+                                                        *@
+                                                        
+                                                        <div class="modal-header bg-danger text-white">
+                                                            <h5 class="modal-title" id="cancelModalLabel-@request.Id">
+                                                                <i class="bi bi-exclamation-triangle"></i> Cancel Request?
+                                                            </h5>
+                                                            @* 
+                                                                LEARNING POINT #10: Accessible Close Button
+                                                                ============================================
+                                                                data-bs-dismiss="modal" - Closes the modal
+                                                                aria-label - Screen reader accessibility
+                                                                
+                                                                Best Practice: Always provide multiple ways to close:
+                                                                - X button (top right)
+                                                                - Cancel button (footer)
+                                                                - Click outside modal (default Bootstrap behavior)
+                                                                - ESC key (default Bootstrap behavior)
+                                                            *@
+                                                            <button type="button" 
+                                                                    class="btn-close btn-close-white" 
+                                                                    data-bs-dismiss="modal" 
+                                                                    aria-label="Close"></button>
+                                                        </div>
+                                                        
+                                                        <div class="modal-body">
+                                                            @* 
+                                                                LEARNING POINT #11: Confirmation Context
+                                                                ========================================
+                                                                Before asking for confirmation, show the user WHAT
+                                                                they're about to cancel. This prevents mistakes.
+                                                                
+                                                                Best Practice:
+                                                                - Always show context in destructive actions
+                                                                - Use visual hierarchy (bold for important info)
+                                                                - Include reference number for clarity
+                                                            *@
+                                                            <div class="alert alert-warning mb-3">
+                                                                <strong>Request:</strong> @request.ReferenceNumber<br>
+                                                                <strong>Type:</strong> @request.ClearanceTypeName<br>
+                                                                <strong>Submitted:</strong> @request.RequestDate.ToLocalTime().ToString("MMM dd, yyyy")
+                                                            </div>
+                                                            
+                                                            <p class="text-muted">
+                                                                This action cannot be undone. Please provide a reason for cancellation.
+                                                            </p>
+                                                            
+                                                            @* 
+                                                                LEARNING POINT #12: Form Validation
+                                                                ====================================
+                                                                We use HTML5 validation attributes:
+                                                                - required: Field must be filled
+                                                                - minlength: Reason must be meaningful
+                                                                - maxlength: Prevent abuse
+                                                                
+                                                                Browser validates BEFORE form submission.
+                                                                Server also validates (never trust client!).
+                                                                
+                                                                Best Practice:
+                                                                - Client validation for UX (instant feedback)
+                                                                - Server validation for security (can't be bypassed)
+                                                                - Use both together
+                                                            *@
+                                                            <div class="mb-3">
+                                                                <label for="cancellationReason-@request.Id" class="form-label">
+                                                                    Reason for cancellation <span class="text-danger">*</span>
+                                                                </label>
+                                                                <textarea id="cancellationReason-@request.Id"
+                                                                          name="Reason" 
+                                                                          class="form-control" 
+                                                                          rows="4" 
+                                                                          required
+                                                                          minlength="10"
+                                                                          maxlength="500"
+                                                                          placeholder="Please explain why you're cancelling this request (minimum 10 characters)"></textarea>
+                                                                <div class="form-text">
+                                                                    <small>Minimum 10 characters, maximum 500 characters</small>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div class="modal-footer">
+                                                            @* 
+                                                                LEARNING POINT #13: Button Ordering and Colors
+                                                                ===============================================
+                                                                Standard UX pattern:
+                                                                - Safe action (Cancel/Close) on LEFT in secondary color
+                                                                - Destructive action (Confirm) on RIGHT in danger color
+                                                                
+                                                                This follows:
+                                                                - Bootstrap conventions
+                                                                - Material Design guidelines  
+                                                                - macOS/Windows dialog patterns
+                                                                
+                                                                Why?
+                                                                - Right side = primary action area (where eyes go)
+                                                                - Danger color = visual warning
+                                                                - Consistent with user expectations
+                                                            *@
+                                                            <button type="button" 
+                                                                    class="btn btn-secondary" 
+                                                                    data-bs-dismiss="modal">
+                                                                <i class="bi bi-x"></i> No, Keep Request
+                                                            </button>
+                                                            <button type="submit" 
+                                                                    class="btn btn-danger">
+                                                                <i class="bi bi-check-circle"></i> Yes, Cancel Request
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- End Cancel Modal -->
                                     }
                                 </tbody>
                             </table>
@@ -100,3 +364,104 @@
         </div>
     </div>
 </div>
+
+@* 
+    LEARNING POINT #14: Scripts Section
+    ===================================
+    @section Scripts allows us to add page-specific JavaScript
+    to the bottom of the page (after jQuery/Bootstrap are loaded).
+    
+    Why at the bottom?
+    - Scripts don't block page rendering
+    - DOM is fully loaded before scripts run
+    - Better performance
+    
+    This section is defined in _Layout.cshtml as:
+    @RenderSection("Scripts", required: false)
+*@
+@section Scripts {
+    <script>
+        /**
+         * LEARNING POINT #15: Auto-dismissing Alerts
+         * ==========================================
+         * This jQuery code automatically hides success/error alerts after 5 seconds.
+         * 
+         * Why?
+         * - Prevents alert clutter after user reads message
+         * - Better UX than manual close button
+         * - Still gives user time to read (5 seconds)
+         * 
+         * setTimeout() is a JavaScript function that runs code after a delay.
+         * fadeOut() is a jQuery animation that smoothly hides elements.
+         * 
+         * Best Practice:
+         * - Success messages: auto-dismiss (user doesn't need to act)
+         * - Error messages: consider NOT auto-dismissing (user needs to fix)
+         */
+        setTimeout(function() {
+            $('.alert-success').fadeOut('slow');
+        }, 5000);
+        
+        /**
+         * LEARNING POINT #16: Form Validation Enhancement
+         * ================================================
+         * Optional: Add additional client-side validation or behavior.
+         * 
+         * Example use cases:
+         * - Trim whitespace from textarea before submit
+         * - Show character counter for reason field
+         * - Disable submit button after first click (prevent double-submit)
+         * 
+         * We keep it simple here, but you could add:
+         */
+        
+        // Example: Prevent double-submission
+        $('form[asp-action="Cancel"]').on('submit', function() {
+            $(this).find('button[type="submit"]').prop('disabled', true).html(
+                '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Cancelling...'
+            );
+        });
+    </script>
+}
+
+@* 
+    ========================================================================
+    SUMMARY OF BEST PRACTICES USED IN THIS FILE
+    ========================================================================
+    
+    1. SECURITY
+       ✓ Anti-forgery tokens on all POST forms
+       ✓ Server-side validation (in controller)
+       ✓ Client-side validation (required, minlength)
+    
+    2. ACCESSIBILITY
+       ✓ Proper ARIA labels
+       ✓ Semantic HTML
+       ✓ Keyboard navigation support (modals close on ESC)
+    
+    3. USER EXPERIENCE
+       ✓ Confirmation before destructive actions
+       ✓ Clear visual feedback (colors, icons)
+       ✓ Context shown before action (what you're cancelling)
+       ✓ Multiple ways to close modal
+    
+    4. CODE ORGANIZATION
+       ✓ Comments explain WHY, not just WHAT
+       ✓ Consistent naming conventions
+       ✓ Logical grouping of related code
+    
+    5. MAINTAINABILITY
+       ✓ DRY principle (Don't Repeat Yourself)
+       ✓ Computed properties in ViewModel (StatusBadgeClass)
+       ✓ Clear separation of concerns
+    
+    6. PERFORMANCE
+       ✓ Scripts at bottom
+       ✓ Minimal JavaScript
+       ✓ Use of Bootstrap built-in features
+    
+    7. RESPONSIVE DESIGN
+       ✓ Bootstrap grid system
+       ✓ Mobile-friendly modals (modal-dialog-centered)
+       ✓ Scrollable tables (table-responsive)
+*@

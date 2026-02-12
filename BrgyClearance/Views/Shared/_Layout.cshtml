@@ -8,87 +8,196 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>@ViewData["Title"] - Proj1</title>
+    <meta name="description" content="Barangay Clearance Request System"/>
+    <title>@ViewData["Title"] - Barangay Clearance System</title>
+    
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/Proj1.styles.css" asp-append-version="true"/>
 </head>
 <body>
-<header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-        <div class="container-fluid">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Proj1</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
-                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <!-- Brand -->
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-house-door-fill"></i> Barangay Clearance
+                </a>
+                
+                <!-- Mobile Toggle Button -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Home</a>
-                    </li>
+                <!-- Navigation Links -->
+                <div class="navbar-collapse collapse" id="navbarNav">
+                    <ul class="navbar-nav flex-grow-1">
+                        <!-- Home Link - Always Visible -->
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-house"></i> Home
+                            </a>
+                        </li>
 
-                    @if (User.IsInRole(Roles.Admin) || User.IsInRole(Roles.Staff))
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Resident" asp-action="Index">Residents</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Clearance" asp-action="Index">Manage Requests</a>
-                        </li>
-                    }
+                        <!-- Admin & Staff Navigation -->
+                        @if (User.IsInRole(Roles.Admin) || User.IsInRole(Roles.Staff))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Resident" asp-action="Index">
+                                    <i class="bi bi-people"></i> Residents
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Clearance" asp-action="Index">
+                                    <i class="bi bi-file-earmark-text"></i> Manage Requests
+                                </a>
+                            </li>
+                            
+                            @if (User.IsInRole(Roles.Admin))
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle text-dark" href="#" id="adminDropdown" role="button"
+                                       data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-gear"></i> Settings
+                                    </a>
+                                    <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="ClearanceType" asp-action="Index">
+                                                <i class="bi bi-tag"></i> Clearance Types
+                                            </a>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <a class="dropdown-item" href="#" onclick="alert('Reports feature coming soon!')">
+                                                <i class="bi bi-graph-up"></i> Reports
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            }
+                        }
 
-                    @if (User.IsInRole(Roles.Resident))
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Clearance" asp-action="MyRequests">My Requests</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Clearance" asp-action="Create">Request Clearance</a>
-                        </li>
-                    }
-                </ul>
+                        <!-- Resident Navigation -->
+                        @if (User.IsInRole(Roles.Resident))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Clearance" asp-action="MyRequests">
+                                    <i class="bi bi-list-check"></i> My Requests
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Clearance" asp-action="Create">
+                                    <i class="bi bi-plus-circle"></i> New Request
+                                </a>
+                            </li>
+                        }
+                    </ul>
 
-                <ul class="navbar-nav ms-auto">
-                    @if (SignInManager.IsSignedIn(User))
-                    {
-                        <li class="nav-item">
-                            <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
-                                <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-                            </form>
-                        </li>
-                    }
-                    else
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Account" asp-action="Register">Register</a>
-                        </li>
-                    }
-                </ul>
+                    <!-- User Account Section -->
+                    <ul class="navbar-nav ms-auto">
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark" href="#" id="userDropdown" role="button"
+                                   data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-person-circle"></i> 
+                                    @UserManager.GetUserName(User)
+                                    
+                                    @* Role Badge *@
+                                    @if (User.IsInRole(Roles.Admin))
+                                    {
+                                        <span class="badge bg-danger ms-1">Admin</span>
+                                    }
+                                    else if (User.IsInRole(Roles.Staff))
+                                    {
+                                        <span class="badge bg-info text-dark ms-1">Staff</span>
+                                    }
+                                    else if (User.IsInRole(Roles.Resident))
+                                    {
+                                        <span class="badge bg-success ms-1">Resident</span>
+                                    }
+                                </a>
+                                
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                    @if (User.IsInRole(Roles.Resident))
+                                    {
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="Resident" asp-action="Profile">
+                                                <i class="bi bi-person"></i> My Profile
+                                            </a>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                    }
+                                    <li>
+                                        <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">
+                                            <i class="bi bi-gear"></i> Account Settings
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                            @* Anti-forgery token is automatically added by ASP.NET Core *@
+                                            <button type="submit" class="dropdown-item">
+                                                <i class="bi bi-box-arrow-right"></i> Logout
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">
+                                    <i class="bi bi-box-arrow-in-right"></i> Login
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Register">
+                                    <i class="bi bi-person-plus"></i> Register
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-top footer text-muted mt-5">
+        <div class="container py-3">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2026 - Barangay Clearance System. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a asp-controller="Home" asp-action="Privacy" class="text-muted text-decoration-none">Privacy Policy</a>
+                </div>
             </div>
         </div>
-    </nav>
-</header>
+    </footer>
 
-<div class="container">
-    <main role="main" class="pb-3">
-        @RenderBody()
-    </main>
-</div>
-
-<footer class="border-top footer text-muted">
-    <div class="container">
-        &copy; 2026 - Proj1
-    </div>
-</footer>
-
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
-@await RenderSectionAsync("Scripts", required: false)
+    <!-- Scripts -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    
+    @* Allow pages to inject additional scripts *@
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

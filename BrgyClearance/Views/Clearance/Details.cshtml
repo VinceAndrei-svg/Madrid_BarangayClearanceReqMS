@@ -1,0 +1,251 @@
+@model Proj1.Models.ViewModels.ClearanceRequestDetailsViewModel
+
+@{
+    ViewData["Title"] = "Clearance Request Details";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Header with Status Badge -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>@ViewData["Title"]</h2>
+                <span class="@Model.StatusBadgeClass fs-5">@Model.StatusDisplay</span>
+            </div>
+
+            <!-- Success/Error Messages -->
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @TempData["Success"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @TempData["Error"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            <!-- Main Content Card -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-file-earmark-text"></i> Request Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Left Column -->
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-5">Reference Number:</dt>
+                                <dd class="col-sm-7">
+                                    <strong class="text-primary">@(Model.ReferenceNumber ?? "Pending")</strong>
+                                </dd>
+
+                                <dt class="col-sm-5">Clearance Type:</dt>
+                                <dd class="col-sm-7">@Model.ClearanceTypeName</dd>
+
+                                <dt class="col-sm-5">Fee:</dt>
+                                <dd class="col-sm-7">
+                                    <strong>₱@Model.Fee.ToString("N2")</strong>
+                                </dd>
+
+                                <dt class="col-sm-5">Request Date:</dt>
+                                <dd class="col-sm-7">@Model.RequestDate.ToString("MMMM dd, yyyy")</dd>
+
+                                <dt class="col-sm-5">Status:</dt>
+                                <dd class="col-sm-7">
+                                    <span class="@Model.StatusBadgeClass">@Model.StatusDisplay</span>
+                                </dd>
+                            </dl>
+                        </div>
+
+                        <!-- Right Column -->
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-5">Resident Name:</dt>
+                                <dd class="col-sm-7">@Model.ResidentName</dd>
+
+                                <dt class="col-sm-5">Address:</dt>
+                                <dd class="col-sm-7">@Model.ResidentAddress</dd>
+
+                                <dt class="col-sm-5">Purpose:</dt>
+                                <dd class="col-sm-7">@Model.Purpose</dd>
+
+                                @if (Model.IsPaid)
+                                {
+                                    <dt class="col-sm-5">Payment Status:</dt>
+                                    <dd class="col-sm-7">
+                                        <span class="badge bg-success">Paid</span>
+                                        <small class="text-muted d-block">
+                                            @Model.PaidDate?.ToString("MMM dd, yyyy")
+                                        </small>
+                                    </dd>
+                                }
+                            </dl>
+                        </div>
+                    </div>
+
+                    <!-- Purpose Section (Full Width) -->
+                    <hr />
+                    <div class="mb-3">
+                        <h6 class="text-muted">Purpose of Request:</h6>
+                        <p class="border-start border-4 border-primary ps-3 mb-0">
+                            @Model.Purpose
+                        </p>
+                    </div>
+
+                    <!-- Processing Information -->
+                    @if (Model.ProcessedDate.HasValue)
+                    {
+                        <hr />
+                        <div class="alert alert-info mb-0">
+                            <h6 class="alert-heading">
+                                <i class="bi bi-info-circle"></i> Processing Information
+                            </h6>
+                            <dl class="row mb-0">
+                                <dt class="col-sm-3">Processed Date:</dt>
+                                <dd class="col-sm-9">@Model.ProcessedDate.Value.ToString("MMMM dd, yyyy hh:mm tt")</dd>
+
+                                @if (!string.IsNullOrEmpty(Model.ProcessedByName))
+                                {
+                                    <dt class="col-sm-3">Processed By:</dt>
+                                    <dd class="col-sm-9">@Model.ProcessedByName</dd>
+                                }
+
+                                @if (!string.IsNullOrEmpty(Model.Remarks))
+                                {
+                                    <dt class="col-sm-3">Remarks:</dt>
+                                    <dd class="col-sm-9">@Model.Remarks</dd>
+                                }
+                            </dl>
+                        </div>
+                    }
+
+                    <!-- Release Information -->
+                    @if (Model.ReleasedDate.HasValue)
+                    {
+                        <hr />
+                        <div class="alert alert-success mb-0">
+                            <h6 class="alert-heading">
+                                <i class="bi bi-check-circle"></i> Release Information
+                            </h6>
+                            <dl class="row mb-0">
+                                <dt class="col-sm-3">Released Date:</dt>
+                                <dd class="col-sm-9">@Model.ReleasedDate.Value.ToString("MMMM dd, yyyy")</dd>
+
+                                <dt class="col-sm-3">Expiry Date:</dt>
+                                <dd class="col-sm-9">
+                                    @Model.ExpiryDate?.ToString("MMMM dd, yyyy")
+                                    @if (Model.ExpiryDate.HasValue && Model.ExpiryDate.Value < DateTime.UtcNow)
+                                    {
+                                        <span class="badge bg-danger ms-2">Expired</span>
+                                    }
+                                    else if (Model.ExpiryDate.HasValue)
+                                    {
+                                        var daysRemaining = (Model.ExpiryDate.Value - DateTime.UtcNow).Days;
+                                        <span class="badge bg-info ms-2">Valid for @daysRemaining days</span>
+                                    }
+                                </dd>
+                            </dl>
+                        </div>
+                    }
+
+                    <!-- Cancellation Information -->
+                    @if (!string.IsNullOrEmpty(Model.CancellationReason))
+                    {
+                        <hr />
+                        <div class="alert alert-warning mb-0">
+                            <h6 class="alert-heading">
+                                <i class="bi bi-exclamation-triangle"></i> Cancellation Information
+                            </h6>
+                            <dl class="row mb-0">
+                                <dt class="col-sm-3">Cancelled Date:</dt>
+                                <dd class="col-sm-9">@Model.CancelledDate?.ToString("MMMM dd, yyyy hh:mm tt")</dd>
+
+                                <dt class="col-sm-3">Reason:</dt>
+                                <dd class="col-sm-9">@Model.CancellationReason</dd>
+                            </dl>
+                        </div>
+                    }
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="card-footer bg-light">
+                    <div class="d-flex justify-content-between flex-wrap gap-2">
+                        <div>
+                            <!-- Back Button -->
+                            @if (User.IsInRole("Resident"))
+                            {
+                                <a asp-action="MyRequests" class="btn btn-outline-secondary">
+                                    <i class="bi bi-arrow-left"></i> Back to My Requests
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-action="Index" class="btn btn-outline-secondary">
+                                    <i class="bi bi-arrow-left"></i> Back to All Requests
+                                </a>
+                            }
+                        </div>
+
+                        <div class="d-flex gap-2 flex-wrap">
+                            <!-- RESIDENT ACTIONS -->
+                            @if (User.IsInRole("Resident") && Model.CanBeCancelled)
+                            {
+                                <a asp-action="Cancel" asp-route-id="@Model.Id" class="btn btn-warning">
+                                    <i class="bi bi-x-circle"></i> Cancel Request
+                                </a>
+                            }
+
+                            <!-- STAFF/ADMIN ACTIONS -->
+                            @if (User.IsInRole("Admin") || User.IsInRole("Staff"))
+                            {
+                                @if (Model.CanBeProcessed)
+                                {
+                                    <a asp-action="Approve" asp-route-id="@Model.Id" class="btn btn-success">
+                                        <i class="bi bi-check-circle"></i> Approve
+                                    </a>
+                                    <a asp-action="Reject" asp-route-id="@Model.Id" class="btn btn-danger">
+                                        <i class="bi bi-x-circle"></i> Reject
+                                    </a>
+                                }
+
+                                @if (Model.CanRecordPayment)
+                                {
+                                    <form asp-action="RecordPayment" asp-route-id="@Model.Id" method="post" class="d-inline" 
+                                          onsubmit="return confirm('Confirm payment of ₱@Model.Fee.ToString("N2")?');">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="bi bi-cash"></i> Record Payment (₱@Model.Fee.ToString("N2"))
+                                        </button>
+                                    </form>
+                                }
+
+                                @if (Model.CanBeReleased)
+                                {
+                                    <form asp-action="MarkAsReleased" asp-route-id="@Model.Id" method="post" class="d-inline"
+                                          onsubmit="return confirm('Mark clearance as released to resident?');">
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="bi bi-file-earmark-check"></i> Mark as Released
+                                        </button>
+                                    </form>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Auto-dismiss alerts after 5 seconds
+        setTimeout(function() {
+            $('.alert').fadeOut('slow');
+        }, 5000);
+    </script>
+}

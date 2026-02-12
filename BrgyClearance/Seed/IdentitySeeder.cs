@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
+using Proj1.Persons;
 
-namespace Proj1.Persons;
+namespace Proj1.Seed;
 
 public static class IdentitySeeder
 {
