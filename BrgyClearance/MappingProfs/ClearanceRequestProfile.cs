@@ -32,9 +32,9 @@ public class ClearanceRequestProfile : Profile
             .ForMember(dest => dest.ResidentAddress,
                 opt => opt.MapFrom(src => src.Resident.Address))
 
-            // Flatten ClearanceType info
+            // ✅ FIX: Map to ClearanceType.Name (using backward-compatible [Column("TypeName")] mapping)
             .ForMember(dest => dest.ClearanceTypeName,
-                opt => opt.MapFrom(src => src.ClearanceType.TypeName))
+                opt => opt.MapFrom(src => src.ClearanceType.Name))
             .ForMember(dest => dest.Fee,
                 opt => opt.MapFrom(src => src.ClearanceType.Fee))
 
@@ -43,9 +43,13 @@ public class ClearanceRequestProfile : Profile
 
         /// <summary>
         /// Maps ClearanceType entity to DTO/ViewModel.
-        /// Simple mapping - all properties match by name.
+        /// ✅ FIX: Explicitly map Name property to TypeName property
+        /// Note: Entity uses Name (with [Column("TypeName")]), ViewModel uses TypeName
+        /// Best Practice: Always explicitly map when property names don't match
         /// </summary>
-        CreateMap<ClearanceType, ClearanceTypeViewModel>();
+        CreateMap<ClearanceType, ClearanceTypeViewModel>()
+            .ForMember(dest => dest.TypeName, 
+                opt => opt.MapFrom(src => src.Name));
 
         // ========================================
         // DTO → VIEW MODEL MAPPINGS
@@ -142,6 +146,15 @@ public class ClearanceRequestProfile : Profile
             .ForMember(dest => dest.IsPaid, opt => opt.Ignore())
             .ForMember(dest => dest.PaidDate, opt => opt.Ignore())
             .ForMember(dest => dest.CollectedByUserId, opt => opt.Ignore())
+            
+            // ✅ FIX: Ignore document generation properties
+            .ForMember(dest => dest.ClearanceDocumentPath, opt => opt.Ignore())
+            .ForMember(dest => dest.DocumentGeneratedDate, opt => opt.Ignore())
+            .ForMember(dest => dest.DocumentGeneratedByUserId, opt => opt.Ignore())
+            
+            // ✅ FIX: Ignore OR/payment properties
+            .ForMember(dest => dest.OfficialReceiptNumber, opt => opt.Ignore())
+            .ForMember(dest => dest.AmountPaid, opt => opt.Ignore())
             
             // ✅ FIX: Ignore audit/base entity properties
             .ForMember(dest => dest.CreatedDate, opt => opt.Ignore())

@@ -1,0 +1,348 @@
+@model Proj1.Models.ViewModels.AuditLogListViewModel
+@using Proj1.Persons
+
+@{
+    ViewData["Title"] = "Audit Log";
+}
+
+@* Double-check authorization in view for security *@
+@if (!User.IsInRole(Roles.Admin))
+{
+    <div class="container mt-4">
+        <div class="alert alert-danger">
+            <i class="bi bi-exclamation-triangle"></i> You do not have permission to access this page.
+        </div>
+    </div>
+    return;
+}
+
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="bi bi-journal-text"></i> Audit Log</h2>
+                <div>
+                    <span class="badge bg-info">Total Logs: @Model.Logs.TotalItems</span>
+                </div>
+            </div>
+
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @TempData["Error"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            @* Filters *@
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-funnel"></i> Filters</h5>
+                </div>
+                <div class="card-body">
+                    <form method="get" asp-action="Index">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <label class="form-label">User</label>
+                                <select name="userId" class="form-select">
+                                    <option value="">All Users</option>
+                                    @foreach (var user in Model.AvailableUsers)
+                                    {
+                                        <option value="@user.Id" 
+                                                selected="@(user.Id == Model.Logs.FilterUserId)">
+                                            @user.Email
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="col-md-2">
+                                <label class="form-label">Entity Type</label>
+                                <select name="entityType" class="form-select">
+                                    <option value="">All Types</option>
+                                    @foreach (var type in Model.AvailableEntityTypes)
+                                    {
+                                        <option value="@type" 
+                                                selected="@(type == Model.Logs.FilterEntityType)">
+                                            @type
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="col-md-2">
+                                <label class="form-label">Action</label>
+                                <select name="action" class="form-select">
+                                    <option value="">All Actions</option>
+                                    @foreach (var action in Model.AvailableActions)
+                                    {
+                                        <option value="@action" 
+                                                selected="@(action == Model.Logs.FilterAction)">
+                                            @action
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="col-md-2">
+                                <label class="form-label">Start Date</label>
+                                <input type="date" name="startDate" class="form-control" 
+                                       value="@Model.Logs.FilterStartDate?.ToString("yyyy-MM-dd")" />
+                            </div>
+
+                            <div class="col-md-2">
+                                <label class="form-label">End Date</label>
+                                <input type="date" name="endDate" class="form-control" 
+                                       value="@Model.Logs.FilterEndDate?.ToString("yyyy-MM-dd")" />
+                            </div>
+
+                            <div class="col-md-1 d-flex align-items-end">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="bi bi-search"></i> Filter
+                                </button>
+                            </div>
+                        </div>
+
+                        @* Page size selector *@
+                        <div class="row mt-3">
+                            <div class="col-md-2">
+                                <label class="form-label">Items per page</label>
+                                <select name="pageSize" class="form-select" onchange="this.form.submit()">
+                                    <option value="10" selected="@(Model.Logs.PageSize == 10)">10</option>
+                                    <option value="20" selected="@(Model.Logs.PageSize == 20)">20</option>
+                                    <option value="50" selected="@(Model.Logs.PageSize == 50)">50</option>
+                                    <option value="100" selected="@(Model.Logs.PageSize == 100)">100</option>
+                                </select>
+                            </div>
+                            <div class="col-md-10 d-flex align-items-end">
+                                <a href="@Url.Action("Index")" class="btn btn-secondary">
+                                    <i class="bi bi-x-circle"></i> Clear Filters
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            @* Audit Log Table *@
+            @if (Model.Logs.Items.Count == 0)
+            {
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> No audit logs found matching your criteria.
+                </div>
+            }
+            else
+            {
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-sm">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 140px;">Timestamp</th>
+                                        <th style="width: 150px;">User</th>
+                                        <th style="width: 100px;">Action</th>
+                                        <th style="width: 120px;">Entity Type</th>
+                                        <th style="width: 80px;">Entity ID</th>
+                                        <th>Details</th>
+                                        <th style="width: 120px;">IP Address</th>
+                                        <th style="width: 100px;" class="text-center">Changes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var log in Model.Logs.Items)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <small>@log.TimestampFormatted</small>
+                                            </td>
+                                            <td>
+                                                @if (!string.IsNullOrEmpty(log.UserEmail))
+                                                {
+                                                    <small title="@log.UserId">@log.UserEmail</small>
+                                                }
+                                                else
+                                                {
+                                                    <small class="text-muted">System</small>
+                                                }
+                                            </td>
+                                            <td>
+                                                <span class="badge @GetActionBadgeClass(log.Action)">
+                                                    @log.Action
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <small>@log.EntityType</small>
+                                            </td>
+                                            <td>
+                                                <small><code>@log.EntityId</code></small>
+                                            </td>
+                                            <td>
+                                                <small>@log.Details</small>
+                                            </td>
+                                            <td>
+                                                <small>@log.IpAddress</small>
+                                            </td>
+                                            <td class="text-center">
+                                                @if (!string.IsNullOrEmpty(log.OldValues) || !string.IsNullOrEmpty(log.NewValues))
+                                                {
+                                                    <button class="btn btn-sm btn-outline-info" 
+                                                            data-bs-toggle="modal" 
+                                                            data-bs-target="#changesModal"
+                                                            data-old="@log.OldValues" 
+                                                            data-new="@log.NewValues">
+                                                        <i class="bi bi-eye"></i> View
+                                                    </button>
+                                                }
+                                                else
+                                                {
+                                                    <small class="text-muted">N/A</small>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                @* Pagination *@
+                @if (Model.Logs.TotalPages > 1)
+                {
+                    <nav aria-label="Audit log pagination" class="mt-3">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item @(Model.Logs.HasPreviousPage ? "" : "disabled")">
+                                <a class="page-link" 
+                                   href="@BuildPageUrl(1)">
+                                    First
+                                </a>
+                            </li>
+                            <li class="page-item @(Model.Logs.HasPreviousPage ? "" : "disabled")">
+                                <a class="page-link" 
+                                   href="@BuildPageUrl(Model.Logs.CurrentPage - 1)">
+                                    Previous
+                                </a>
+                            </li>
+
+                            @for (int i = Math.Max(1, Model.Logs.CurrentPage - 2); 
+                                  i <= Math.Min(Model.Logs.TotalPages, Model.Logs.CurrentPage + 2); 
+                                  i++)
+                            {
+                                <li class="page-item @(i == Model.Logs.CurrentPage ? "active" : "")">
+                                    <a class="page-link" href="@BuildPageUrl(i)">@i</a>
+                                </li>
+                            }
+
+                            <li class="page-item @(Model.Logs.HasNextPage ? "" : "disabled")">
+                                <a class="page-link" 
+                                   href="@BuildPageUrl(Model.Logs.CurrentPage + 1)">
+                                    Next
+                                </a>
+                            </li>
+                            <li class="page-item @(Model.Logs.HasNextPage ? "" : "disabled")">
+                                <a class="page-link" 
+                                   href="@BuildPageUrl(Model.Logs.TotalPages)">
+                                    Last
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+
+                    <div class="text-center mt-2">
+                        <small class="text-muted">
+                            Page @Model.Logs.CurrentPage of @Model.Logs.TotalPages 
+                            (@Model.Logs.TotalItems total logs)
+                        </small>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+@* Modal for viewing changes *@
+<div class="modal fade" id="changesModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Change Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Old Values</h6>
+                        <pre id="oldValues" class="bg-light p-3" style="max-height: 400px; overflow-y: auto;"><code></code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>New Values</h6>
+                        <pre id="newValues" class="bg-light p-3" style="max-height: 400px; overflow-y: auto;"><code></code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Populate modal with change details
+        document.getElementById('changesModal').addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var oldValues = button.getAttribute('data-old');
+            var newValues = button.getAttribute('data-new');
+
+            // Pretty print JSON
+            document.querySelector('#oldValues code').textContent = 
+                oldValues ? JSON.stringify(JSON.parse(oldValues), null, 2) : 'N/A';
+            document.querySelector('#newValues code').textContent = 
+                newValues ? JSON.stringify(JSON.parse(newValues), null, 2) : 'N/A';
+        });
+    </script>
+}
+
+@functions {
+    string GetActionBadgeClass(string action)
+    {
+        return action switch
+        {
+            "Create" => "bg-success",
+            "Update" => "bg-warning",
+            "Delete" => "bg-danger",
+            "Approve" => "bg-primary",
+            "Reject" => "bg-secondary",
+            "RecordPayment" => "bg-info",
+            "Release" => "bg-success",
+            "Toggle" => "bg-warning",
+            _ => "bg-secondary"
+        };
+    }
+
+    string BuildPageUrl(int page)
+    {
+        var queryParams = new Dictionary<string, string>
+        {
+            { "page", page.ToString() },
+            { "pageSize", Model.Logs.PageSize.ToString() }
+        };
+
+        if (!string.IsNullOrEmpty(Model.Logs.FilterUserId))
+            queryParams["userId"] = Model.Logs.FilterUserId;
+
+        if (!string.IsNullOrEmpty(Model.Logs.FilterEntityType))
+            queryParams["entityType"] = Model.Logs.FilterEntityType;
+
+        if (!string.IsNullOrEmpty(Model.Logs.FilterAction))
+            queryParams["action"] = Model.Logs.FilterAction;
+
+        if (Model.Logs.FilterStartDate.HasValue)
+            queryParams["startDate"] = Model.Logs.FilterStartDate.Value.ToString("yyyy-MM-dd");
+
+        if (Model.Logs.FilterEndDate.HasValue)
+            queryParams["endDate"] = Model.Logs.FilterEndDate.Value.ToString("yyyy-MM-dd");
+
+        var queryString = string.Join("&", queryParams.Select(kvp => $"{kvp.Key}={kvp.Value}"));
+        return $"{Url.Action("Index")}?{queryString}";
+    }
+}

@@ -1,3 +1,14 @@
+/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/obj/Debug/net10.0/BrgyClearance.csproj.AssemblyReference.cache
+/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/obj/Debug/net10.0/rpswa.dswa.cache.json
+/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/obj/Debug/net10.0/BrgyClearance.GeneratedMSBuildEditorConfig.editorconfig
+/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/obj/Debug/net10.0/BrgyClearance.AssemblyInfoInputs.cache
+/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/obj/Debug/net10.0/BrgyClearance.AssemblyInfo.cs
+/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/obj/Debug/net10.0/BrgyClearance.csproj.CoreCompileInputs.cache
+/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/obj/Debug/net10.0/BrgyClearance.MvcApplicationPartsAssemblyInfo.cs
+/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/obj/Debug/net10.0/BrgyClearance.MvcApplicationPartsAssemblyInfo.cache
+/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/obj/Debug/net10.0/BrgyClearance.RazorAssemblyInfo.cache
+/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/obj/Debug/net10.0/BrgyClearance.RazorAssemblyInfo.cs
+/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/obj/Debug/net10.0/BrgyClearance.sourcelink.json
 /Users/drei.dev/RiderProjects/Proj1/BrgyClearance/bin/Debug/net10.0/appsettings.Development.json
 /Users/drei.dev/RiderProjects/Proj1/BrgyClearance/bin/Debug/net10.0/appsettings.json
 /Users/drei.dev/RiderProjects/Proj1/BrgyClearance/bin/Debug/net10.0/BrgyClearance.staticwebassets.runtime.json
@@ -76,6 +87,7 @@
 /Users/drei.dev/RiderProjects/Proj1/BrgyClearance/bin/Debug/net10.0/Microsoft.VisualStudio.Web.CodeGeneration.Templating.dll
 /Users/drei.dev/RiderProjects/Proj1/BrgyClearance/bin/Debug/net10.0/Microsoft.VisualStudio.Web.CodeGeneration.Utils.dll
 /Users/drei.dev/RiderProjects/Proj1/BrgyClearance/bin/Debug/net10.0/Microsoft.VisualStudio.Web.CodeGenerators.Mvc.dll
+/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/bin/Debug/net10.0/Microsoft.Win32.SystemEvents.dll
 /Users/drei.dev/RiderProjects/Proj1/BrgyClearance/bin/Debug/net10.0/Mono.TextTemplating.dll
 /Users/drei.dev/RiderProjects/Proj1/BrgyClearance/bin/Debug/net10.0/Newtonsoft.Json.dll
 /Users/drei.dev/RiderProjects/Proj1/BrgyClearance/bin/Debug/net10.0/NuGet.Common.dll
@@ -87,6 +99,7 @@
 /Users/drei.dev/RiderProjects/Proj1/BrgyClearance/bin/Debug/net10.0/NuGet.ProjectModel.dll
 /Users/drei.dev/RiderProjects/Proj1/BrgyClearance/bin/Debug/net10.0/NuGet.Protocol.dll
 /Users/drei.dev/RiderProjects/Proj1/BrgyClearance/bin/Debug/net10.0/NuGet.Versioning.dll
+/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/bin/Debug/net10.0/QRCoder.dll
 /Users/drei.dev/RiderProjects/Proj1/BrgyClearance/bin/Debug/net10.0/QuestPDF.dll
 /Users/drei.dev/RiderProjects/Proj1/BrgyClearance/bin/Debug/net10.0/System.ClientModel.dll
 /Users/drei.dev/RiderProjects/Proj1/BrgyClearance/bin/Debug/net10.0/System.CodeDom.dll
@@ -96,6 +109,7 @@
 /Users/drei.dev/RiderProjects/Proj1/BrgyClearance/bin/Debug/net10.0/System.Composition.Runtime.dll
 /Users/drei.dev/RiderProjects/Proj1/BrgyClearance/bin/Debug/net10.0/System.Composition.TypedParts.dll
 /Users/drei.dev/RiderProjects/Proj1/BrgyClearance/bin/Debug/net10.0/System.Configuration.ConfigurationManager.dll
+/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/bin/Debug/net10.0/System.Drawing.Common.dll
 /Users/drei.dev/RiderProjects/Proj1/BrgyClearance/bin/Debug/net10.0/System.IdentityModel.Tokens.Jwt.dll
 /Users/drei.dev/RiderProjects/Proj1/BrgyClearance/bin/Debug/net10.0/System.Memory.Data.dll
 /Users/drei.dev/RiderProjects/Proj1/BrgyClearance/bin/Debug/net10.0/System.Reflection.MetadataLoadContext.dll
@@ -270,6 +284,7 @@
 /Users/drei.dev/RiderProjects/Proj1/BrgyClearance/bin/Debug/net10.0/runtimes/win-arm64/native/Microsoft.Data.SqlClient.SNI.dll
 /Users/drei.dev/RiderProjects/Proj1/BrgyClearance/bin/Debug/net10.0/runtimes/win-x64/native/Microsoft.Data.SqlClient.SNI.dll
 /Users/drei.dev/RiderProjects/Proj1/BrgyClearance/bin/Debug/net10.0/runtimes/win-x86/native/Microsoft.Data.SqlClient.SNI.dll
+/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/bin/Debug/net10.0/runtimes/win/lib/net6.0/Microsoft.Win32.SystemEvents.dll
 /Users/drei.dev/RiderProjects/Proj1/BrgyClearance/bin/Debug/net10.0/runtimes/linux-arm64/native/libQuestPdfSkia.so
 /Users/drei.dev/RiderProjects/Proj1/BrgyClearance/bin/Debug/net10.0/runtimes/linux-arm64/native/libqpdf.so
 /Users/drei.dev/RiderProjects/Proj1/BrgyClearance/bin/Debug/net10.0/runtimes/linux-musl-x64/native/libQuestPdfSkia.so
@@ -292,17 +307,8 @@
 /Users/drei.dev/RiderProjects/Proj1/BrgyClearance/bin/Debug/net10.0/runtimes/win-x86/native/libwinpthread-1.dll
 /Users/drei.dev/RiderProjects/Proj1/BrgyClearance/bin/Debug/net10.0/runtimes/win-x86/native/qpdf.dll
 /Users/drei.dev/RiderProjects/Proj1/BrgyClearance/bin/Debug/net10.0/runtimes/win-x86/native/zlib1.dll
-/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/obj/Debug/net10.0/BrgyClearance.csproj.AssemblyReference.cache
-/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/obj/Debug/net10.0/rpswa.dswa.cache.json
-/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/obj/Debug/net10.0/BrgyClearance.GeneratedMSBuildEditorConfig.editorconfig
-/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/obj/Debug/net10.0/BrgyClearance.AssemblyInfoInputs.cache
-/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/obj/Debug/net10.0/BrgyClearance.AssemblyInfo.cs
-/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/obj/Debug/net10.0/BrgyClearance.csproj.CoreCompileInputs.cache
-/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/obj/Debug/net10.0/BrgyClearance.MvcApplicationPartsAssemblyInfo.cs
-/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/obj/Debug/net10.0/BrgyClearance.MvcApplicationPartsAssemblyInfo.cache
-/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/obj/Debug/net10.0/BrgyClearance.RazorAssemblyInfo.cache
-/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/obj/Debug/net10.0/BrgyClearance.RazorAssemblyInfo.cs
-/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/obj/Debug/net10.0/BrgyClearance.sourcelink.json
+/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/bin/Debug/net10.0/runtimes/unix/lib/net6.0/System.Drawing.Common.dll
+/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/bin/Debug/net10.0/runtimes/win/lib/net6.0/System.Drawing.Common.dll
 /Users/drei.dev/RiderProjects/Proj1/BrgyClearance/obj/Debug/net10.0/rjimswa.dswa.cache.json
 /Users/drei.dev/RiderProjects/Proj1/BrgyClearance/obj/Debug/net10.0/rjsmrazor.dswa.cache.json
 /Users/drei.dev/RiderProjects/Proj1/BrgyClearance/obj/Debug/net10.0/rjsmcshtml.dswa.cache.json

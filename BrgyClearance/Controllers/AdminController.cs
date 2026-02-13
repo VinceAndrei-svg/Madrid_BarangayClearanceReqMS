@@ -27,6 +27,8 @@ public class AdminController : Controller
         return View();
     }
 
+    // Only Admins can access the staff list
+    [Authorize(Roles = Roles.Admin)]
     public async Task<IActionResult> Index()
     {
         var result = await _accountService.GetStaffListAsync();
@@ -84,6 +86,8 @@ public class AdminController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    // Only Admins can toggle staff status
+    [Authorize(Roles = Roles.Admin)]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> ToggleStatus(string id)

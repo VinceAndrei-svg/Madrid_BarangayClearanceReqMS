@@ -1,7 +1,19 @@
 @model List<Proj1.Models.ViewModels.StaffMemberViewModel>
+@using Proj1.Persons
 
 @{
     ViewData["Title"] = "Staff Management";
+}
+
+@* Double-check authorization in view for security *@
+@if (!User.IsInRole(Roles.Admin))
+{
+    <div class="container mt-4">
+        <div class="alert alert-danger">
+            <i class="bi bi-exclamation-triangle"></i> You do not have permission to access this page.
+        </div>
+    </div>
+    return;
 }
 
 <div class="container mt-4">

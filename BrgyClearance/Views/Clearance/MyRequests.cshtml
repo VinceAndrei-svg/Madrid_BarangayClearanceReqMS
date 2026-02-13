@@ -7,7 +7,6 @@ ViewData["Title"] = "My Clearance Requests";
 <div class="container mt-4">
     <div class="row">
         <div class="col-12">
-            <!-- Page Header -->
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2>
                     <i class="bi bi-file-earmark-text"></i> My Clearance Requests
@@ -17,7 +16,6 @@ ViewData["Title"] = "My Clearance Requests";
                 </a>
             </div>
 
-            <!-- Success/Error Messages -->
             @if (TempData["Success"] != null)
             {
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -34,7 +32,6 @@ ViewData["Title"] = "My Clearance Requests";
             </div>
             }
 
-            <!-- Empty State -->
             @if (Model.Count == 0)
             {
             <div class="card text-center py-5">
@@ -50,7 +47,6 @@ ViewData["Title"] = "My Clearance Requests";
             }
             else
             {
-            <!-- Requests Table -->
             <div class="card shadow-sm">
                 <div class="card-body p-0">
                     <div class="table-responsive">
@@ -70,7 +66,6 @@ ViewData["Title"] = "My Clearance Requests";
                             @foreach (var request in Model)
                             {
                             <tr>
-                                <!-- Reference Number -->
                                 <td class="px-4">
                                     <a asp-action="Details"
                                        asp-route-id="@request.Id"
@@ -79,14 +74,12 @@ ViewData["Title"] = "My Clearance Requests";
                                     </a>
                                 </td>
 
-                                <!-- Clearance Type -->
                                 <td>
                                                 <span class="badge bg-light text-dark border">
                                                     @request.ClearanceTypeName
                                                 </span>
                                 </td>
 
-                                <!-- Purpose (Truncated) -->
                                 <td>
                                     <small class="text-muted">
                                         @(request.Purpose.Length > 40
@@ -95,26 +88,22 @@ ViewData["Title"] = "My Clearance Requests";
                                     </small>
                                 </td>
 
-                                <!-- Request Date -->
                                 <td>
                                     <small class="text-nowrap">
                                         @request.RequestDate.ToLocalTime().ToString("MMM dd, yyyy")
                                     </small>
                                 </td>
 
-                                <!-- Status Badge -->
                                 <td>
                                                 <span class="badge @request.StatusBadgeClass">
                                                     @request.Status
                                                 </span>
                                 </td>
 
-                                <!-- Remarks -->
                                 <td>
                                     @if (!string.IsNullOrEmpty(request.Remarks))
                                     {
-                                    <small class="text-muted"
-                                           title="@request.Remarks">
+                                    <small class="text-muted" title="@request.Remarks">
                                         @(request.Remarks.Length > 30
                                         ? request.Remarks.Substring(0, 30) + "..."
                                         : request.Remarks)
@@ -126,42 +115,42 @@ ViewData["Title"] = "My Clearance Requests";
                                     }
                                 </td>
 
-                                <!-- Actions -->
                                 <td class="text-end px-4">
-                                    @if (request.Status == "Submitted" || request.Status == "Pending")
-                                    {
-                                    <!-- View Details -->
-                                    <a asp-action="Details"
-                                       asp-route-id="@request.Id"
-                                       class="btn btn-sm btn-outline-secondary me-1"
-                                       title="View full details">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
+                                    <div class="btn-group" role="group">
+                                        <a asp-action="Details"
+                                           asp-route-id="@request.Id"
+                                           class="btn btn-sm btn-outline-primary"
+                                           title="View Details">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
 
-                                    <!-- Cancel Button -->
-                                    <button type="button"
-                                            class="btn btn-sm btn-outline-danger"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#cancelModal-@request.Id"
-                                            title="Cancel this request">
-                                        <i class="bi bi-x-circle"></i>
-                                    </button>
-                                    }
-                                    else if (request.Status == "Cancelled")
+                                        @if (request.Status == "Released")
+                                        {
+                                        <a asp-action="DownloadPdf"
+                                           asp-route-id="@request.Id"
+                                           class="btn btn-sm btn-success"
+                                           title="Download PDF">
+                                            <i class="bi bi-file-pdf"></i>
+                                        </a>
+                                        }
+
+                                        @if (request.Status == "Submitted" || request.Status == "Pending")
+                                        {
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-danger"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#cancelModal-@request.Id"
+                                                title="Cancel Request">
+                                            <i class="bi bi-x-circle"></i>
+                                        </button>
+                                        }
+                                    </div>
+
+                                    @if (request.Status == "Cancelled")
                                     {
-                                    <small class="text-muted">
+                                    <div class="text-muted small mt-1">
                                         <i class="bi bi-info-circle"></i> Cancelled by you
-                                    </small>
-                                    }
-                                    else
-                                    {
-                                    <!-- View Details for other statuses -->
-                                    <a asp-action="Details"
-                                       asp-route-id="@request.Id"
-                                       class="btn btn-sm btn-outline-secondary"
-                                       title="View full details">
-                                        <i class="bi bi-eye"></i> View
-                                    </a>
+                                    </div>
                                     }
                                 </td>
                             </tr>
@@ -171,7 +160,6 @@ ViewData["Title"] = "My Clearance Requests";
                     </div>
                 </div>
 
-                <!-- Table Footer with Summary -->
                 <div class="card-footer bg-light">
                     <small class="text-muted">
                         <i class="bi bi-info-circle"></i>
@@ -184,18 +172,10 @@ ViewData["Title"] = "My Clearance Requests";
     </div>
 </div>
 
-@* 
-    ============================================================================
-    CANCEL REQUEST MODALS
-    ============================================================================
-    These modals are placed outside the main content area for better organization.
-    One modal per request, uniquely identified by request.Id
-*@
 @if (Model.Count > 0)
 {
 @foreach (var request in Model.Where(r => r.Status == "Submitted" || r.Status == "Pending"))
 {
-<!-- Cancel Confirmation Modal -->
 <div class="modal fade"
      id="cancelModal-@request.Id"
      tabindex="-1"
@@ -205,34 +185,15 @@ ViewData["Title"] = "My Clearance Requests";
      data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            @* 
-                        🎯 CRITICAL FIX: Model Binding with Hidden Inputs
-                        ===================================================
-                        We use hidden inputs instead of asp-route-id because:
-                        
-                        1. Controller expects: Cancel(CancelRequestViewModel model)
-                        2. Model binding matches form input NAMES to model properties
-                        3. Hidden inputs go in request BODY (not URL)
-                        4. This is the standard ASP.NET Core pattern for ViewModels
-                        
-                        WHY THIS WORKS:
-                        - <input name="RequestId" /> → binds to model.RequestId ✓
-                        - <input name="ReferenceNumber" /> → binds to model.ReferenceNumber ✓
-                        - <textarea name="Reason" /> → binds to model.Reason ✓
-                    *@
             <form asp-action="Cancel"
                   method="post"
                   id="cancelForm-@request.Id"
                   novalidate>
 
-                @* Anti-Forgery Token (CSRF Protection) *@
                 @Html.AntiForgeryToken()
-
-                @* Hidden inputs for model binding *@
                 <input type="hidden" name="RequestId" value="@request.Id" />
                 <input type="hidden" name="ReferenceNumber" value="@request.ReferenceNumber" />
 
-                <!-- Modal Header -->
                 <div class="modal-header bg-danger text-white">
                     <h5 class="modal-title" id="cancelModalLabel-@request.Id">
                         <i class="bi bi-exclamation-triangle"></i> Cancel Request?
@@ -243,9 +204,7 @@ ViewData["Title"] = "My Clearance Requests";
                             aria-label="Close"></button>
                 </div>
 
-                <!-- Modal Body -->
                 <div class="modal-body">
-                    <!-- Request Information -->
                     <div class="alert alert-warning mb-3">
                         <h6 class="alert-heading mb-2">
                             <i class="bi bi-file-earmark-text"></i> Request Details
@@ -264,13 +223,11 @@ ViewData["Title"] = "My Clearance Requests";
                         </dl>
                     </div>
 
-                    <!-- Warning Message -->
                     <div class="alert alert-danger" role="alert">
                         <strong><i class="bi bi-exclamation-octagon"></i> Warning:</strong>
                         This action cannot be undone. Once cancelled, you will need to submit a new request.
                     </div>
 
-                    <!-- Cancellation Reason Field -->
                     <div class="mb-3">
                         <label for="cancellationReason-@request.Id" class="form-label">
                             <strong>Reason for cancellation</strong>
@@ -285,7 +242,6 @@ ViewData["Title"] = "My Clearance Requests";
                                   maxlength="500"
                                   placeholder="Please explain why you're cancelling this request (minimum 10 characters)..."></textarea>
 
-                        <!-- Character Counter -->
                         <div class="d-flex justify-content-between mt-1">
                             <small class="text-muted">
                                 <i class="bi bi-info-circle"></i>
@@ -296,14 +252,12 @@ ViewData["Title"] = "My Clearance Requests";
                             </small>
                         </div>
 
-                        <!-- Validation Feedback -->
                         <div class="invalid-feedback">
                             Please provide a reason (minimum 10 characters).
                         </div>
                     </div>
                 </div>
 
-                <!-- Modal Footer -->
                 <div class="modal-footer">
                     <button type="button"
                             class="btn btn-secondary"
@@ -325,22 +279,15 @@ ViewData["Title"] = "My Clearance Requests";
 
 @section Scripts {
 <script>
-    /**
-     * Auto-dismiss success alerts after 5 seconds
-     */
     setTimeout(function() {
         $('.alert-success').fadeOut('slow');
     }, 5000);
 
-    /**
-     * Character counter for cancellation reason textarea
-     */
     $('textarea[name="Reason"]').on('input', function() {
         var requestId = $(this).closest('.modal').attr('id').split('-')[1];
         var charCount = $(this).val().length;
         $('#charCount-' + requestId).text(charCount);
 
-        // Visual feedback for character limits
         if (charCount >= 10 && charCount <= 500) {
             $(this).removeClass('is-invalid').addClass('is-valid');
         } else if (charCount > 0) {
@@ -350,16 +297,12 @@ ViewData["Title"] = "My Clearance Requests";
         }
     });
 
-    /**
-     * Form validation and submit handling
-     */
     $('form[id^="cancelForm-"]').on('submit', function(e) {
         var form = $(this);
         var textarea = form.find('textarea[name="Reason"]');
         var reason = textarea.val().trim();
         var submitBtn = form.find('button[type="submit"]');
 
-        // Client-side validation
         if (reason.length < 10) {
             e.preventDefault();
             textarea.addClass('is-invalid');
@@ -375,22 +318,15 @@ ViewData["Title"] = "My Clearance Requests";
             return false;
         }
 
-        // Disable submit button and show loading state
         submitBtn.prop('disabled', true);
         submitBtn.html(
             '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Cancelling...'
         );
 
-        // Also disable the close button to prevent accidental closure
         form.find('button[data-bs-dismiss="modal"]').prop('disabled', true);
-
-        // Form will submit normally
         return true;
     });
 
-    /**
-     * Reset form when modal is closed
-     */
     $('.modal').on('hidden.bs.modal', function() {
         var form = $(this).find('form');
         form[0].reset();
@@ -400,18 +336,12 @@ ViewData["Title"] = "My Clearance Requests";
         );
         form.find('button[data-bs-dismiss="modal"]').prop('disabled', false);
 
-        // Reset character counter
         var requestId = $(this).attr('id').split('-')[1];
         $('#charCount-' + requestId).text('0');
     });
 
-    /**
-     * Prevent modal from closing when clicking outside (already set in HTML)
-     * This is a safety measure for destructive actions
-     */
     $('.modal[data-bs-backdrop="static"]').on('click', function(e) {
         if ($(e.target).hasClass('modal')) {
-            // Shake animation to indicate modal can't be closed by clicking outside
             $(this).find('.modal-dialog').addClass('animate__animated animate__headShake');
             setTimeout(function() {
                 $('.modal-dialog').removeClass('animate__animated animate__headShake');
@@ -420,53 +350,3 @@ ViewData["Title"] = "My Clearance Requests";
     });
 </script>
 }
-
-@* 
-    ============================================================================
-    BEST PRACTICES SUMMARY
-    ============================================================================
-    
-    ✓ SECURITY
-      - Anti-forgery tokens on all POST forms
-      - Server-side validation in controller
-      - Client-side validation for UX
-      - Modal backdrop="static" prevents accidental closure
-    
-    ✓ ACCESSIBILITY
-      - Proper ARIA labels
-      - Semantic HTML structure
-      - Keyboard navigation support
-      - Screen reader friendly
-    
-    ✓ USER EXPERIENCE
-      - Clear visual feedback with icons and colors
-      - Loading states on submit (prevents double-submission)
-      - Character counter for textarea
-      - Auto-dismiss for success messages
-      - Empty state with call-to-action
-      - Confirmation context before destructive action
-    
-    ✓ MODEL BINDING (THE CRITICAL FIX)
-      - Hidden inputs for ViewModel properties
-      - Input names match model property names exactly
-      - Form body binding (not URL route parameters)
-      - Standard ASP.NET Core pattern for POST forms
-    
-    ✓ CODE QUALITY
-      - Comprehensive comments explaining WHY
-      - Consistent naming conventions
-      - DRY principle (Don't Repeat Yourself)
-      - Separation of concerns
-    
-    ✓ PERFORMANCE
-      - Scripts in @section Scripts (loaded after page)
-      - Minimal DOM manipulations
-      - Efficient event delegation
-      - No memory leaks (event cleanup on modal close)
-    
-    ✓ RESPONSIVE DESIGN
-      - Bootstrap grid system
-      - Mobile-friendly table (table-responsive)
-      - Centered modals
-      - Touch-friendly button sizes
-*@

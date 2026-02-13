@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Proj1.Filters;
 using Proj1.Interfaces;
 using Proj1.MappingProfiles;
+using Proj1.Models.Configuration;
 using Proj1.Repositories;
 using Proj1.Seed;
 using Proj1.Services;
@@ -59,11 +61,21 @@ builder.Services.ConfigureApplicationCookie(options =>
 // ========================================
 // DEPENDENCY INJECTION - REPOSITORIES
 // ========================================
+builder.Services.Configure<FileStorageSettings>(
+    builder.Configuration.GetSection("FileStorage"));
+builder.Services.Configure<BarangayInfo>(
+    builder.Configuration.GetSection("BarangayInfo"));
+builder.Services.Configure<ClearanceSettings>(
+    builder.Configuration.GetSection("ClearanceSettings"));
+
 
 // Best Practice: Register from most specific to least specific
 builder.Services.AddScoped<IResidentRepository, ResidentRepository>();
 builder.Services.AddScoped<IClearanceRequestRepository, ClearanceRequestRepository>();
 builder.Services.AddScoped<IClearanceTypeRepository, ClearanceTypeRepository>();
+
+// ✅ Audit log repository
+builder.Services.AddScoped<IAuditLogRepository, AuditLogRepository>();
 
 // ========================================
 // DEPENDENCY INJECTION - SERVICES
@@ -74,6 +86,14 @@ builder.Services.AddScoped<IResidentService, ResidentService>();
 builder.Services.AddScoped<IClearanceRequestService, ClearanceRequestService>();
 builder.Services.AddScoped<IClearanceTypeService, ClearanceTypeService>();
 builder.Services.AddScoped<IPdfService, PdfService>();
+builder.Services.AddScoped<IPdfClearanceService, PdfClearanceService>();
+builder.Services.AddScoped<IFileStorageService, FileStorageService>();
+
+// ✅ Audit log service
+builder.Services.AddScoped<IAuditLogService, AuditLogService>();
+
+// ✅ Audit action filter (MUST be registered before AddControllersWithViews)
+builder.Services.AddScoped<AuditActionFilter>();
 
 // ========================================
 // AUTOMAPPER CONFIGURATION
@@ -87,10 +107,14 @@ builder.Services.AddAutoMapper(typeof(ResidentProfile).Assembly);
 // MVC & RAZOR PAGES
 // ========================================
 
+// ✅ CRITICAL FIX: Register AddControllersWithViews ONLY ONCE
 builder.Services.AddControllersWithViews(options =>
 {
     // Best Practice: Add anti-forgery token to all POST requests automatically
     options.Filters.Add(new Microsoft.AspNetCore.Mvc.AutoValidateAntiforgeryTokenAttribute());
+    
+    // ✅ CRITICAL: Add audit action filter
+    options.Filters.AddService<AuditActionFilter>();
 });
 
 builder.Services.AddRazorPages();
@@ -221,3 +245,4 @@ app.MapRazorPages();
 // ========================================
 
 app.Run();
+

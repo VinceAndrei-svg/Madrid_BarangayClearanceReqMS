@@ -175,7 +175,7 @@
                 <!-- Action Buttons -->
                 <div class="card-footer bg-light">
                     <div class="d-flex justify-content-between flex-wrap gap-2">
-                        <div>
+                        <div class="d-flex gap-2">
                             <!-- Back Button -->
                             @if (User.IsInRole("Resident"))
                             {
@@ -187,6 +187,16 @@
                             {
                                 <a asp-action="Index" class="btn btn-outline-secondary">
                                     <i class="bi bi-arrow-left"></i> Back to All Requests
+                                </a>
+                            }
+
+                            <!-- PDF Download Button - Best Practice: Only show when Released -->
+                            @if (Model.StatusDisplay == "Released")
+                            {
+                                <a asp-action="DownloadPdf" asp-route-id="@Model.Id" 
+                                   class="btn btn-success" 
+                                   title="Download Clearance PDF">
+                                    <i class="bi bi-file-pdf"></i> Download PDF
                                 </a>
                             }
                         </div>

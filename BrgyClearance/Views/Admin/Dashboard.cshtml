@@ -1,43 +1,211 @@
+@using Proj1.Persons
+@inject Microsoft.AspNetCore.Identity.UserManager<Microsoft.AspNetCore.Identity.IdentityUser> UserManager
+
 @{
     ViewData["Title"] = "Admin Dashboard";
+    var isAdmin = User.IsInRole(Roles.Admin);
 }
 
 <div class="container mt-4">
     <div class="row">
         <div class="col-12">
-            <h2 class="mb-4">Admin Dashboard</h2>
+            @* ============================================
+               PAGE HEADER
+               ============================================ *@
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>
+                    @if (isAdmin)
+                    {
+                        <i class="bi bi-speedometer2"></i>
+                        <text>Admin Dashboard</text>
+                    }
+                    else
+                    {
+                        <i class="bi bi-briefcase"></i>
+                        <text>Staff Dashboard</text>
+                    }
+                </h2>
+                <div>
+                    <span class="text-muted">
+                        <i class="bi bi-calendar3"></i> 
+                        @DateTime.Now.ToString("MMMM dd, yyyy")
+                    </span>
+                </div>
+            </div>
 
+            @* ============================================
+               SUCCESS/ERROR MESSAGES
+               ============================================ *@
             @if (TempData["Success"] != null)
             {
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    @TempData["Success"]
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    <i class="bi bi-check-circle-fill"></i> @TempData["Success"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             }
 
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill"></i> @TempData["Error"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            @* ============================================
+               DASHBOARD CARDS
+               ============================================ *@
             <div class="row g-4">
-                <div class="col-md-6">
-                    <div class="card border-primary">
+                
+                @* ============================================
+                   STAFF MANAGEMENT CARD (Admin Only)
+                   ============================================ *@
+                @if (isAdmin)
+                {
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card border-primary h-100 shadow-sm">
+                            <div class="card-body text-center">
+                                <div class="mb-3">
+                                    <i class="bi bi-people-fill display-4 text-primary"></i>
+                                </div>
+                                <h5 class="card-title">Staff Management</h5>
+                                <p class="card-text text-muted">
+                                    Create and manage staff accounts for your barangay
+                                </p>
+                                <a asp-action="Index" class="btn btn-primary">
+                                    <i class="bi bi-arrow-right-circle"></i> Manage Staff
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @* ============================================
+                   CLEARANCE REQUESTS CARD (All Staff)
+                   ============================================ *@
+                <div class="col-md-6 col-lg-4">
+                    <div class="card border-success h-100 shadow-sm">
                         <div class="card-body text-center">
-                            <i class="bi bi-people-fill display-4 text-primary"></i>
-                            <h5 class="card-title mt-3">Staff Management</h5>
-                            <p class="card-text">Create and manage staff accounts</p>
-                            <a asp-action="Index" class="btn btn-primary">
-                                <i class="bi bi-arrow-right-circle"></i> Manage Staff
+                            <div class="mb-3">
+                                <i class="bi bi-file-earmark-text-fill display-4 text-success"></i>
+                            </div>
+                            <h5 class="card-title">Clearance Requests</h5>
+                            <p class="card-text text-muted">
+                                View and process clearance requests from residents
+                            </p>
+                            <a asp-controller="Clearance" asp-action="Index" class="btn btn-success">
+                                <i class="bi bi-arrow-right-circle"></i> View Requests
                             </a>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-md-6">
-                    <div class="card border-success">
+                @* ============================================
+                   AUDIT LOG CARD (Admin Only) ⭐ NEW
+                   ============================================ *@
+                @if (isAdmin)
+                {
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card border-warning h-100 shadow-sm">
+                            <div class="card-body text-center">
+                                <div class="mb-3">
+                                    <i class="bi bi-journal-text display-4 text-warning"></i>
+                                </div>
+                                <h5 class="card-title">Audit Log</h5>
+                                <p class="card-text text-muted">
+                                    View all system activities and track changes
+                                </p>
+                                <a asp-controller="Audit" asp-action="Index" class="btn btn-warning">
+                                    <i class="bi bi-arrow-right-circle"></i> View Audit Log
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @* ============================================
+                   RESIDENTS CARD (All Staff)
+                   ============================================ *@
+                <div class="col-md-6 col-lg-4">
+                    <div class="card border-info h-100 shadow-sm">
                         <div class="card-body text-center">
-                            <i class="bi bi-file-earmark-text-fill display-4 text-success"></i>
-                            <h5 class="card-title mt-3">Clearance Requests</h5>
-                            <p class="card-text">View and process all requests</p>
-                            <a asp-controller="Clearance" asp-action="Index" class="btn btn-success">
-                                <i class="bi bi-arrow-right-circle"></i> View Requests
+                            <div class="mb-3">
+                                <i class="bi bi-person-lines-fill display-4 text-info"></i>
+                            </div>
+                            <h5 class="card-title">Residents</h5>
+                            <p class="card-text text-muted">
+                                Manage resident information and records
+                            </p>
+                            <a asp-controller="Resident" asp-action="Index" class="btn btn-info">
+                                <i class="bi bi-arrow-right-circle"></i> View Residents
                             </a>
+                        </div>
+                    </div>
+                </div>
+
+                @* ============================================
+                   REPORTS CARD (Coming Soon)
+                   ============================================ *@
+                <div class="col-md-6 col-lg-4">
+                    <div class="card border-secondary h-100 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="mb-3">
+                                <i class="bi bi-graph-up display-4 text-secondary"></i>
+                            </div>
+                            <h5 class="card-title">Reports</h5>
+                            <p class="card-text text-muted">
+                                Generate analytics and statistical reports
+                            </p>
+                            <button class="btn btn-secondary" disabled>
+                                <i class="bi bi-clock-history"></i> Coming Soon
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                @* ============================================
+                   SETTINGS CARD (Admin Only)
+                   ============================================ *@
+                @if (isAdmin)
+                {
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card border-dark h-100 shadow-sm">
+                            <div class="card-body text-center">
+                                <div class="mb-3">
+                                    <i class="bi bi-gear-fill display-4 text-dark"></i>
+                                </div>
+                                <h5 class="card-title">System Settings</h5>
+                                <p class="card-text text-muted">
+                                    Configure clearance types and system options
+                                </p>
+                                <a asp-controller="Settings" asp-action="ClearanceTypes" class="btn btn-dark">
+                                    <i class="bi bi-arrow-right-circle"></i> Configure System
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            @* ============================================
+               QUICK STATS (Optional - can be added later)
+               ============================================ *@
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="bi bi-info-circle"></i> Quick Tips
+                            </h5>
+                            <ul class="mb-0">
+                                <li>Process clearance requests from the <strong>Clearance Requests</strong> page</li>
+                                <li>Manage resident information in the <strong>Residents</strong> section</li>
+                                @if (isAdmin)
+                                {
+                                    <li>View all system activities in the <strong>Audit Log</strong> for compliance</li>
+                                    <li>Create staff accounts to help process clearances</li>
+                                }
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -45,3 +213,40 @@
         </div>
     </div>
 </div>
+
+@* ============================================
+   IMPLEMENTATION NOTES:
+   
+   ✅ AUDIT LOG CARD ADDED:
+   - Located in the main dashboard grid
+   - Only visible to Admin users
+   - Consistent styling with other cards
+   - Professional warning color (yellow/orange)
+   
+   📝 BEST PRACTICES FOLLOWED:
+   - Role-based authorization (isAdmin check)
+   - Consistent card heights (h-100)
+   - Responsive grid (col-md-6 col-lg-4)
+   - Shadow effects for depth (shadow-sm)
+   - Icon consistency (Bootstrap Icons)
+   - Proper spacing (g-4, mb-3, mt-4)
+   - Semantic HTML structure
+   - Accessibility (aria attributes implied)
+   - Success/error message handling
+   - Clean, maintainable code
+   
+   🎨 DESIGN CHOICES:
+   - Warning color for Audit Log (orange/yellow)
+   - Matches your existing design patterns
+   - Cards have equal height for clean layout
+   - Icons are large and clear (display-4)
+   - Text is muted for better hierarchy
+   - Consistent button styling
+   
+   🔧 CUSTOMIZATION:
+   - Add more cards by copying the pattern
+   - Change colors by modifying border-* classes
+   - Add stats by injecting services
+   - Add recent activity widget (see advanced option)
+   
+   ============================================ *@

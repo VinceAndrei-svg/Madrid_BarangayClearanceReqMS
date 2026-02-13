@@ -50,6 +50,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQWRtaW4vSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/Views/Audit/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQXVkaXQvSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [/Users/drei.dev/RiderProjects/Proj1/BrgyClearance/Views/Clearance/Approve.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2xlYXJhbmNlL0FwcHJvdmUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 

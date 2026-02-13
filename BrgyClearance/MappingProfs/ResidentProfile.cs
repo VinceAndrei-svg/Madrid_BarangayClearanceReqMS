@@ -45,6 +45,12 @@ public class ResidentProfile : Profile
             // ✅ FIX: Ignore UserId - it's set after creating the Identity user
             .ForMember(dest => dest.UserId, opt => opt.Ignore())
             
+            // ✅ FIX: Ignore navigation properties
+            .ForMember(dest => dest.ClearanceRequests, opt => opt.Ignore())
+            
+            // ✅ FIX: Ignore computed properties
+            .ForMember(dest => dest.FullName, opt => opt.Ignore())
+            
             // ✅ FIX: Ignore audit/base entity properties (set by repository)
             .ForMember(dest => dest.CreatedDate, opt => opt.Ignore())
             .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())
@@ -70,6 +76,12 @@ public class ResidentProfile : Profile
             // ✅ FIX: Ignore UserId - it should never change after creation
             .ForMember(dest => dest.UserId, opt => opt.Ignore())
             
+            // ✅ FIX: Ignore navigation properties
+            .ForMember(dest => dest.ClearanceRequests, opt => opt.Ignore())
+            
+            // ✅ FIX: Ignore computed properties
+            .ForMember(dest => dest.FullName, opt => opt.Ignore())
+            
             // ✅ FIX: Ignore audit/base entity properties (updated by repository)
             .ForMember(dest => dest.CreatedDate, opt => opt.Ignore())
             .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())
@@ -84,6 +96,7 @@ public class ResidentProfile : Profile
 
         /// <summary>
         /// Maps DTO to list view model with computed FullName property.
+        /// ✅ Simple concatenation without MiddleName
         /// </summary>
         CreateMap<ResidentDto, ResidentViewModel>()
             .ForMember(dest => dest.FullName,
@@ -97,6 +110,7 @@ public class ResidentProfile : Profile
 
         /// <summary>
         /// Maps DTO to details view model with computed FullName property.
+        /// ✅ Simple concatenation without MiddleName
         /// </summary>
         CreateMap<ResidentDto, ResidentDetailsViewModel>()
             .ForMember(dest => dest.FullName,

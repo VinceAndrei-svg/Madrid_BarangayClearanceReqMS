@@ -3,22 +3,28 @@ using System.ComponentModel.DataAnnotations;
 namespace Proj1.Models.Common.Enums;
 
 /// <summary>
-/// Represents civil status options for residents.
+/// Philippine civil status categories as per PSA standards
 /// </summary>
 public enum CivilStatus
 {
     [Display(Name = "Single")]
-    Single = 0,
+    Single = 1,
     
     [Display(Name = "Married")]
-    Married = 1,
+    Married = 2,
     
     [Display(Name = "Widowed")]
-    Widowed = 2,
-    
-    [Display(Name = "Divorced")]
-    Divorced = 3,
+    Widowed = 3,
     
     [Display(Name = "Separated")]
-    Separated = 4
+    Separated = 4,
+    
+    [Display(Name = "Divorced")]
+    Divorced = 5,
+    
+    [Display(Name = "Annulled")]
+    Annulled = 6,
+    
+    [Display(Name = "Live-in")]
+    LiveIn = 7
 }

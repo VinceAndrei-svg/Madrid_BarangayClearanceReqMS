@@ -4,6 +4,9 @@ using Proj1.Models.Entities;
 
 namespace Proj1.Seed;
 
+/// <summary>
+/// Seeds initial clearance types into the database
+/// </summary>
 public static class ClearanceTypeSeeder
 {
     public static async Task SeedClearanceTypesAsync(IServiceProvider services)
@@ -23,7 +26,7 @@ public static class ClearanceTypeSeeder
         {
             new ClearanceType
             {
-                TypeName = "Barangay Clearance",
+                Name = "Barangay Clearance", // ✅ Uses Name property (maps to TypeName in DB)
                 Description = "Certificate of residency and good moral character",
                 Fee = 50.00m,
                 ProcessingDays = 3,
@@ -31,7 +34,7 @@ public static class ClearanceTypeSeeder
             },
             new ClearanceType
             {
-                TypeName = "Business Permit Clearance",
+                Name = "Business Permit Clearance",
                 Description = "Required for business permit applications",
                 Fee = 150.00m,
                 ProcessingDays = 5,
@@ -39,7 +42,7 @@ public static class ClearanceTypeSeeder
             },
             new ClearanceType
             {
-                TypeName = "Employment Clearance",
+                Name = "Employment Clearance",
                 Description = "Certificate for employment purposes",
                 Fee = 75.00m,
                 ProcessingDays = 3,
@@ -47,7 +50,7 @@ public static class ClearanceTypeSeeder
             },
             new ClearanceType
             {
-                TypeName = "Police Clearance",
+                Name = "Police Clearance",
                 Description = "Barangay endorsement for police clearance",
                 Fee = 100.00m,
                 ProcessingDays = 7,
@@ -55,7 +58,7 @@ public static class ClearanceTypeSeeder
             },
             new ClearanceType
             {
-                TypeName = "Indigency Certificate",
+                Name = "Indigency Certificate",
                 Description = "Certificate of low-income status",
                 Fee = 0.00m,
                 ProcessingDays = 2,

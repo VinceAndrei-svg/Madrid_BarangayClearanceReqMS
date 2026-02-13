@@ -67,4 +67,31 @@ public class ClearanceRequest : BaseEntity
     /// User ID of staff who collected payment
     /// </summary>
     public string? CollectedByUserId { get; set; }
+
+    // === DOCUMENT GENERATION INFO (NEW) ===
+    /// <summary>
+    /// Web path to the generated PDF clearance document (e.g., "/clearances/Clearance_ABC123_20240213.pdf")
+    /// </summary>
+    public string? ClearanceDocumentPath { get; set; }
+    
+    /// <summary>
+    /// Timestamp when the PDF document was generated
+    /// </summary>
+    public DateTime? DocumentGeneratedDate { get; set; }
+    
+    /// <summary>
+    /// User ID of staff who generated the document (if manually triggered)
+    /// </summary>
+    public string? DocumentGeneratedByUserId { get; set; }
+
+    // === PAYMENT DETAILS (ENHANCED - OPTIONAL) ===
+    /// <summary>
+    /// Official Receipt Number for the payment
+    /// </summary>
+    public string? OfficialReceiptNumber { get; set; }
+    
+    /// <summary>
+    /// Amount paid (should match ClearanceType.Fee, but stored for historical accuracy)
+    /// </summary>
+    public decimal? AmountPaid { get; set; }
 }
