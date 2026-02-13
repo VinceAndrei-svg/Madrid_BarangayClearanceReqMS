@@ -9,10 +9,6 @@ using Proj1.Models.Common.Enums;
 
 namespace Proj1.Controllers;
 
-/// <summary>
-/// Controller for managing clearance requests.
-/// Handles the full lifecycle: submit, approve/reject, payment, release, cancel.
-/// </summary>
 [Authorize]
 public class ClearanceController : Controller
 {
@@ -33,19 +29,11 @@ public class ClearanceController : Controller
         _mapper = mapper;
     }
 
-    // ===================================
-    // READ OPERATIONS
-    // ===================================
-
-    /// <summary>
-    /// Admin/Staff: View all clearance requests
-    /// </summary>
     [Authorize(Roles = "Admin,Staff")]
     public async Task<IActionResult> Index(string? status)
     {
         List<ClearanceRequestDto> requests;
         
-        // Filter by status if provided
         if (!string.IsNullOrEmpty(status) && Enum.TryParse<RequestStatus>(status, out var requestStatus))
         {
             requests = await _service.GetByStatusAsync(requestStatus);
@@ -60,9 +48,6 @@ public class ClearanceController : Controller
         return View(vm);
     }
 
-    /// <summary>
-    /// Resident: View own clearance requests
-    /// </summary>
     [Authorize(Roles = "Resident")]
     public async Task<IActionResult> MyRequests()
     {
@@ -81,17 +66,12 @@ public class ClearanceController : Controller
         return View(vm);
     }
 
-    /// <summary>
-    /// View detailed information about a specific request.
-    /// Staff/Admin can view all, Residents can only view their own.
-    /// </summary>
     [Authorize]
     public async Task<IActionResult> Details(int id)
     {
         var request = await _service.GetByIdAsync(id);
         if (request == null) return NotFound();
 
-        // Authorization check: Residents can only view their own requests
         if (User.IsInRole("Resident"))
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -99,7 +79,7 @@ public class ClearanceController : Controller
             
             if (resident == null || request.ResidentId != resident.Id)
             {
-                return Forbid(); // 403 Forbidden
+                return Forbid();
             }
         }
 
@@ -107,13 +87,6 @@ public class ClearanceController : Controller
         return View(vm);
     }
 
-    // ===================================
-    // CREATE OPERATIONS
-    // ===================================
-
-    /// <summary>
-    /// Resident: Show form to create new clearance request
-    /// </summary>
     [Authorize(Roles = "Resident")]
     [HttpGet]
     public async Task<IActionResult> Create()
@@ -126,9 +99,6 @@ public class ClearanceController : Controller
         return View(model);
     }
 
-    /// <summary>
-    /// Resident: Submit new clearance request
-    /// </summary>
     [Authorize(Roles = "Resident")]
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -158,27 +128,11 @@ public class ClearanceController : Controller
             Purpose = model.Purpose
         };
 
-        try
-        {
-            var requestId = await _service.CreateAsync(dto);
-            TempData["Success"] = "Your clearance request has been submitted successfully!";
-            return RedirectToAction(nameof(Details), new { id = requestId });
-        }
-        catch (Exception ex)
-        {
-            ModelState.AddModelError("", $"Error submitting request: {ex.Message}");
-            model.ClearanceTypes = await _typeService.GetActiveAsync();
-            return View(model);
-        }
+        var requestId = await _service.CreateAsync(dto);
+        TempData["Success"] = "Your clearance request has been submitted successfully!";
+        return RedirectToAction(nameof(Details), new { id = requestId });
     }
 
-    // ===================================
-    // APPROVE/REJECT WORKFLOW
-    // ===================================
-
-    /// <summary>
-    /// Staff/Admin: Show approval form
-    /// </summary>
     [Authorize(Roles = "Admin,Staff")]
     [HttpGet]
     public async Task<IActionResult> Approve(int id)
@@ -204,9 +158,6 @@ public class ClearanceController : Controller
         return View(vm);
     }
 
-    /// <summary>
-    /// Staff/Admin: Process approval
-    /// </summary>
     [Authorize(Roles = "Admin,Staff")]
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -235,9 +186,6 @@ public class ClearanceController : Controller
         }
     }
 
-    /// <summary>
-    /// Staff/Admin: Show rejection form
-    /// </summary>
     [Authorize(Roles = "Admin,Staff")]
     [HttpGet]
     public async Task<IActionResult> Reject(int id)
@@ -263,9 +211,6 @@ public class ClearanceController : Controller
         return View(vm);
     }
 
-    /// <summary>
-    /// Staff/Admin: Process rejection
-    /// </summary>
     [Authorize(Roles = "Admin,Staff")]
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -294,13 +239,6 @@ public class ClearanceController : Controller
         }
     }
 
-    // ===================================
-    // PAYMENT & RELEASE WORKFLOW
-    // ===================================
-
-    /// <summary>
-    /// Staff/Admin: Record payment (cash only)
-    /// </summary>
     [Authorize(Roles = "Admin,Staff")]
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -311,21 +249,13 @@ public class ClearanceController : Controller
 
         var success = await _service.RecordPaymentAsync(id, staffUserId);
         
-        if (!success)
-        {
-            TempData["Error"] = "Unable to record payment. Check if request is in Approved status.";
-        }
-        else
-        {
-            TempData["Success"] = "Payment recorded successfully. Request is now ready for release.";
-        }
+        TempData[success ? "Success" : "Error"] = success
+            ? "Payment recorded successfully. Request is now ready for release."
+            : "Unable to record payment. Check if request is in Approved status.";
 
         return RedirectToAction(nameof(Details), new { id });
     }
 
-    /// <summary>
-    /// Staff/Admin: Mark clearance as released
-    /// </summary>
     [Authorize(Roles = "Admin,Staff")]
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -336,25 +266,13 @@ public class ClearanceController : Controller
 
         var success = await _service.MarkAsReleasedAsync(id, staffUserId);
         
-        if (!success)
-        {
-            TempData["Error"] = "Unable to mark as released. Check if payment has been recorded.";
-        }
-        else
-        {
-            TempData["Success"] = "Clearance marked as released. Valid for 6 months.";
-        }
+        TempData[success ? "Success" : "Error"] = success
+            ? "Clearance marked as released. Valid for 6 months."
+            : "Unable to mark as released. Check if payment has been recorded.";
 
         return RedirectToAction(nameof(Details), new { id });
     }
 
-    // ===================================
-    // CANCELLATION
-    // ===================================
-
-    /// <summary>
-    /// Resident: Show cancellation form
-    /// </summary>
     [Authorize(Roles = "Resident")]
     [HttpGet]
     public async Task<IActionResult> Cancel(int id)
@@ -362,15 +280,14 @@ public class ClearanceController : Controller
         var request = await _service.GetByIdAsync(id);
         if (request == null) return NotFound();
 
-        // Verify ownership
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         var resident = await _residentService.GetByUserIdAsync(userId!);
+        
         if (resident == null || request.ResidentId != resident.Id)
         {
             return Forbid();
         }
 
-        // Check if can be cancelled
         if (!CanBeCancelled(request.Status))
         {
             TempData["Error"] = "This request cannot be cancelled in its current status.";
@@ -386,15 +303,15 @@ public class ClearanceController : Controller
         return View(vm);
     }
 
-    /// <summary>
-    /// Resident: Process cancellation
-    /// </summary>
     [Authorize(Roles = "Resident")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Cancel(CancelRequestViewModel model)
     {
-        if (!ModelState.IsValid) return View(model);
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
 
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) return Unauthorized();
@@ -411,21 +328,11 @@ public class ClearanceController : Controller
         return RedirectToAction(nameof(MyRequests));
     }
 
-    // ===================================
-    // HELPER METHODS
-    // ===================================
-
-    /// <summary>
-    /// Helper: Check if request can be approved/rejected
-    /// </summary>
     private bool CanBeProcessed(RequestStatus status)
     {
         return status == RequestStatus.Submitted || status == RequestStatus.Pending;
     }
 
-    /// <summary>
-    /// Helper: Check if request can be cancelled
-    /// </summary>
     private bool CanBeCancelled(RequestStatus status)
     {
         return status == RequestStatus.Submitted || status == RequestStatus.Pending;
